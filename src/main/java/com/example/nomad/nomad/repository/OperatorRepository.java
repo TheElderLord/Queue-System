@@ -1,0 +1,11 @@
+package com.example.nomad.nomad.repository;
+
+import com.example.nomad.nomad.model.Operator;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface OperatorRepository extends JpaRepository<Operator,Long> {
+
+    List<Operator> findOperatorsByRoleId(Long id);
+}
