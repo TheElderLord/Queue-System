@@ -16,6 +16,7 @@ public class WindowMapper {
         dto.setStatus(window.getStatus());
         dto.setName(window.getName());
         dto.setDescription(window.getDescription());
+        dto.setActive(window.isActive());
         return dto;
     }
 
@@ -28,6 +29,7 @@ public class WindowMapper {
         window.setStatus(dto.getStatus());
         window.setName(dto.getName());
         window.setDescription(dto.getDescription());
+        window.setActive(dto.isActive());
         // Branch needs to be set separately, typically by service layer
         return window;
     }

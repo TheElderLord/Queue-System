@@ -6,9 +6,9 @@ import com.example.nomad.nomad.model.ServiceModel;
 import java.util.List;
 
 public interface ServService {
-    List<ServiceModelDto> findServices();
+    List<ServiceModelDto> getServices();
 
-    ServiceModelDto findServiceById(Long id);
+    ServiceModelDto getServiceById(Long id);
 
     ServiceModelDto createService(ServiceModelDto serviceModel);
 

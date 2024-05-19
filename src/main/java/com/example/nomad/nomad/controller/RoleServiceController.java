@@ -6,18 +6,18 @@ import com.example.nomad.nomad.dto.RoleServiceDto;
 import com.example.nomad.nomad.service.roleService.RoleServiceService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/v1/role-services")
 @AllArgsConstructor
 public class RoleServiceController {
     @Qualifier("roleServiceServiceImpl")
-    private RoleServiceService roleServiceService;
+    private final RoleServiceService roleServiceService;
 
     @GetMapping
     private ResponseEntity<List<RoleServiceDto>> getRoleServices(){
@@ -37,7 +37,15 @@ public class RoleServiceController {
     }
     @GetMapping("/role/{id}")
     private ResponseEntity<List<RoleServiceDto>> getRoleServicesByRoleId(@PathVariable Long id){
-        List<RoleServiceDto> list = roleServiceService.getRoleServicesByRole(id);
+        List<RoleServiceDto> list = roleServiceService.getRoleServicesByRoleId(id);
+        if(list.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return  ResponseEntity.ok(list);
+    }
+    @GetMapping("/branch/{id}")
+    private ResponseEntity<List<RoleServiceDto>> getRoleServicesByBranchId(@PathVariable Long id){
+        List<RoleServiceDto> list = roleServiceService.getRoleServicesByBranch(id);
         if(list.isEmpty()){
             return ResponseEntity.notFound().build();
         }
@@ -46,7 +54,7 @@ public class RoleServiceController {
 
     @PostMapping
     private ResponseEntity<RoleServiceDto> createRoleService(@RequestBody RoleServiceDto newRoleServiceModel){
-        return ResponseEntity.ok(roleServiceService.saveRoleService(newRoleServiceModel)) ;
+        return ResponseEntity.status(HttpStatus.CREATED).body(roleServiceService.saveRoleService(newRoleServiceModel)) ;
     }
     @PutMapping("/{id}")
     private ResponseEntity<Void> updateRoleService(@PathVariable Long id,@RequestBody RoleServiceDto updatedRoleService){

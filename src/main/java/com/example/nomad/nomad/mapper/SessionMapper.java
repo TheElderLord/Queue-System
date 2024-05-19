@@ -13,6 +13,7 @@ public class SessionMapper {
         dto.setStatus(session.getStatus());
         dto.setStartTime(session.getStartTime());
         dto.setEndTime(session.getEndTime());
+        dto.setActive(session.isActive());
         if (session.getOperator() != null) {
             dto.setOperatorId(session.getOperator().getId());
         }
@@ -34,6 +35,7 @@ public class SessionMapper {
         session.setStatus(dto.getStatus());
         session.setStartTime(dto.getStartTime());
         session.setEndTime(dto.getEndTime());
+        session.setActive(dto.isActive());
         // Operator, Window, and Branch need to be set separately, typically by service layer
         return session;
     }

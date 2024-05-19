@@ -13,7 +13,8 @@ public interface RoleServiceService {
 
     RoleServiceDto getRoleServiceById(Long id);
 
-    List<RoleServiceDto> getRoleServicesByRole(Long id);
+    List<RoleServiceDto> getRoleServicesByRoleId(Long id);
+    List<RoleServiceDto> getRoleServicesByBranch(Long id);
 
     RoleServiceDto saveRoleService(RoleServiceDto roleServiceDto);
     RoleServiceDto updateRoleService(Long id, RoleServiceDto roleServiceDto);

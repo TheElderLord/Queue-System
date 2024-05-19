@@ -8,4 +8,5 @@ import java.util.List;
 public interface OperatorRepository extends JpaRepository<Operator,Long> {
 
     List<Operator> findOperatorsByRoleId(Long id);
+    List<Operator> findAllByActive(boolean active);
 }

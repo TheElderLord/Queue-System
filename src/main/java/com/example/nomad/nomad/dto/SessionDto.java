@@ -14,8 +14,10 @@ public class SessionDto {
     private String status;
     @NonNull
     private LocalDate startTime;
-    @NonNull
+
     private LocalDate endTime;
+    @NonNull
+    private boolean isActive;
     private Long operatorId;
     private Long windowId;
     private Long branchId;

@@ -22,8 +22,12 @@ public class Operator {
     private String name;
 
     @NonNull
-    @Column(name = "lastname",nullable = false)
+    @Column(name = "lastname",nullable = false,columnDefinition = "boolean default false")
     private String lastname;
+
+    @NonNull
+    @Column(name = "active",nullable = false)
+    private boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id",nullable = false)

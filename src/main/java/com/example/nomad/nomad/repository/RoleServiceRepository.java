@@ -11,4 +11,6 @@ public interface RoleServiceRepository extends JpaRepository<RoleServiceModel,Lo
 
     List<RoleServiceModel> findAllById(Long id);
     List<RoleServiceModel> findAllByRoleId(Long id);
+
+    List<RoleServiceModel> findAllByBranchId(Long id);
 }

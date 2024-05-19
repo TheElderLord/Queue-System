@@ -52,8 +52,14 @@ public class RoleServiceServiceImpl implements RoleServiceService {
     }
 
     @Override
-    public List<RoleServiceDto> getRoleServicesByRole(Long id) {
+    public List<RoleServiceDto> getRoleServicesByRoleId(Long id) {
         return roleServiceRepository.findAllByRoleId(id).stream()
+                .map(RoleServiceMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RoleServiceDto> getRoleServicesByBranch(Long id) {
+        return roleServiceRepository.findAllByBranchId(id).stream()
                 .map(RoleServiceMapper::toDto).collect(Collectors.toList());
     }
 

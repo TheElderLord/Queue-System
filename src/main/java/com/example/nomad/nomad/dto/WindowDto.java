@@ -14,4 +14,5 @@ public class WindowDto {
     @NonNull
     private String name;
     private String description;
+    private boolean active;
 }

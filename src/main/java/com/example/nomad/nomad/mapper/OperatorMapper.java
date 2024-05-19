@@ -12,6 +12,7 @@ public class OperatorMapper {
         dto.setId(operator.getId());
         dto.setName(operator.getName());
         dto.setLastname(operator.getLastname());
+        dto.setActive(operator.isActive());
         if (operator.getRole() != null) {
             dto.setRoleId(operator.getRole().getId());
         }
@@ -26,6 +27,7 @@ public class OperatorMapper {
         operator.setId(dto.getId());
         operator.setName(dto.getName());
         operator.setLastname(dto.getLastname());
+        operator.setActive(dto.isActive());
         // Role needs to be set separately, typically by service layer
         return operator;
     }

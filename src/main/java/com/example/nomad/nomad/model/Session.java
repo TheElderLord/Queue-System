@@ -23,9 +23,12 @@ public class Session {
     @NonNull
     @Column(name = "start_time")
     private LocalDate startTime;
-    @NonNull
+
     @Column(name = "end_time")
     private LocalDate endTime;
+
+    @Column(name = "active",nullable = false,columnDefinition = "boolean default false")
+    private boolean isActive;
 
     @ManyToOne
     @JoinColumn(name = "operator_id")
@@ -34,6 +37,8 @@ public class Session {
     @ManyToOne
     @JoinColumn(name = "window_id")
     private Window window;
+
+
 
     @ManyToOne
     @JoinColumn(name = "branch_id")

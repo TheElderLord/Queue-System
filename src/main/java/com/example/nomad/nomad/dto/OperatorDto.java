@@ -14,5 +14,6 @@ public class OperatorDto {
     @NonNull
     private String lastname;
     private Long roleId;
+    private boolean active;
 }
 

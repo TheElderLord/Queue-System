@@ -2,10 +2,10 @@ package com.example.nomad.nomad.controller;
 
 
 import com.example.nomad.nomad.dto.RoleDto;
-import com.example.nomad.nomad.model.Role;
 import com.example.nomad.nomad.service.role.RoleService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +22,7 @@ public class RoleController {
 
     @GetMapping
     private ResponseEntity<List<RoleDto>> findAllRoles() {
-        List<RoleDto> list = roleService.findAllRoles();
+        List<RoleDto> list = roleService.getAllRoles();
         if(list.isEmpty()){
             return ResponseEntity.notFound().build();
         }
@@ -30,7 +30,7 @@ public class RoleController {
     }
     @GetMapping("/{requestedId}")
     private ResponseEntity<RoleDto> findRoleById(@PathVariable Long requestedId){
-        RoleDto requestedRole = roleService.findById(requestedId);
+        RoleDto requestedRole = roleService.getRoleById(requestedId);
         if(requestedRole==null){
             return ResponseEntity.notFound().build();
         }
@@ -39,7 +39,7 @@ public class RoleController {
 
     @PostMapping
     private ResponseEntity<RoleDto> createRole(@RequestBody RoleDto newRole){
-        return ResponseEntity.ok(roleService.saveRole(newRole));
+        return ResponseEntity.status(HttpStatus.CREATED).body(roleService.saveRole(newRole));
     }
 
 

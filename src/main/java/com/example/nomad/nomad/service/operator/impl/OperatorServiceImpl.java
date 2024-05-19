@@ -28,6 +28,23 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     @Override
+    public List<OperatorDto> getOnlineOperators() {
+        return operatorRepository.findAllByActive(true).stream().map(
+                OperatorMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OperatorDto> getOfflineOperators() {
+        return operatorRepository.findAllByActive(false).stream().map(
+                OperatorMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isOperatorOnline(Long id) {
+        return getEntityById(id).isActive();
+    }
+
+    @Override
     public OperatorDto getOperatorById(Long id) {
         return OperatorMapper.toDto(getEntityById(id));
     }

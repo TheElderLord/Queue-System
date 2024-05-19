@@ -20,6 +20,7 @@ public class Window {
     @JoinColumn(name = "branch_id")
     private Branch branch;
 
+
     @NonNull
     @Column(name = "status")
     private String status;
@@ -28,6 +29,11 @@ public class Window {
     @Column(name = "name")
     private String name;
 
+    @NonNull
+    @Column(name = "active",columnDefinition = "boolean default false")
+    private boolean active;
+
     private String description;
+
 
 }

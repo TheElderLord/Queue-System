@@ -20,7 +20,7 @@ public class RoleServiceImpl implements com.example.nomad.nomad.service.role.Rol
     private RoleRepository roleRepository;
 
     @Override
-    public List<RoleDto> findAllRoles() {
+    public List<RoleDto> getAllRoles() {
         return roleRepository.findAll().stream().map(RoleMapper::toDto).collect(Collectors.toList());
     }
 
@@ -30,7 +30,7 @@ public class RoleServiceImpl implements com.example.nomad.nomad.service.role.Rol
     }
 
     @Override
-    public RoleDto findById(Long id) {
+    public RoleDto getRoleById(Long id) {
         return RoleMapper.toDto(getEntityById(id));
     }
 

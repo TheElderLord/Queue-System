@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface RoleService {
 
-    List<RoleDto> findAllRoles();
-    RoleDto findById(Long id);
+    List<RoleDto> getAllRoles();
+    RoleDto getRoleById(Long id);
 
     RoleDto saveRole(RoleDto role);
     RoleDto updateRole(Long id, RoleDto student);

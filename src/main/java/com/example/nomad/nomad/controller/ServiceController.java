@@ -2,9 +2,9 @@ package com.example.nomad.nomad.controller;
 
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.service.serviceModel.ServService;
-import com.example.nomad.nomad.service.serviceModel.impl.ServiceServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class ServiceController {
 
     @GetMapping
     private ResponseEntity<List<ServiceModelDto>> getServices(){
-        List<ServiceModelDto> list = service.findServices();
+        List<ServiceModelDto> list = service.getServices();
         if(list==null){
             return ResponseEntity.notFound().build();
         }
@@ -27,7 +27,7 @@ public class ServiceController {
     }
     @GetMapping("/{id}")
     private ResponseEntity<ServiceModelDto> getServiceById(@PathVariable Long id){
-        ServiceModelDto serviceModel = service.findServiceById(id);
+        ServiceModelDto serviceModel = service.getServiceById(id);
         if(serviceModel==null){
             return ResponseEntity.notFound().build();
         }
@@ -36,7 +36,7 @@ public class ServiceController {
 
     @PostMapping
     private ResponseEntity<ServiceModelDto> createService(@RequestBody ServiceModelDto newServiceModel){
-        return ResponseEntity.ok(service.createService(newServiceModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createService(newServiceModel));
     }
 
     @PutMapping("/{id}")
