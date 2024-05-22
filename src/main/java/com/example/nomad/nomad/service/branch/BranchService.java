@@ -13,7 +13,7 @@ public interface BranchService {
 
     BranchDto createBranch(BranchDto branchDto);
 
-    boolean updateBranch(Long id, BranchDto newBranchDto);
+    BranchDto updateBranch(Long id, BranchDto newBranchDto);
 
     boolean deleteBranch(Long id);
 

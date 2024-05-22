@@ -1,5 +1,6 @@
 package com.example.nomad.nomad.service.session;
 
+import com.example.nomad.nomad.Enum.SessionStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.SessionDto;
 import com.example.nomad.nomad.model.Session;
@@ -13,11 +14,13 @@ public interface SessionService {
     List<SessionDto> getSessions();
     List<SessionDto> getSessionsByBranchId(Long id);
     List<SessionDto> getSessionsByOperatorId(Long id);
-    List<SessionDto> getSessionByWindowId(Long id);
+    List<SessionDto> getSessionsByWindowId(Long id);
     List<SessionDto> getActiveSessions();
     List<SessionDto> getInActiveSessions();
-    boolean isSessionActive(Long id);
     SessionDto getSessionById(Long id);
+    List<SessionDto> getSessionsByStatus(SessionStatus sessionStatus);
+
+    boolean isSessionActive(Long id);
 
     List<ServiceModelDto> getAvailableServices();
     //Get
@@ -26,7 +29,7 @@ public interface SessionService {
 
 
     SessionDto startASession(SessionDto newSession);
-    SessionDto stopASession(Long id);
+    SessionDto stopASession(Long id,SessionStatus sessionStatus);
     SessionDto updateSession(Long id, SessionDto newSessionBody);
 
     void deleteSession(Long id);

@@ -9,7 +9,7 @@ public interface RoleServiceService {
 
     List<RoleServiceDto> getRoleServices();
 
-    List<RoleServiceDto> getRoleServicesById(Long id);
+//    List<RoleServiceDto> getRoleServicesById(Long id);
 
     RoleServiceDto getRoleServiceById(Long id);
 

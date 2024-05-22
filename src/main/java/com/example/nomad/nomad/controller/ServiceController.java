@@ -40,8 +40,13 @@ public class ServiceController {
     @PutMapping("/{id}")
     private ResponseEntity<ServiceModelDto> updateService(@PathVariable Long id,@RequestBody ServiceModelDto newService){
         return ResponseEntity.ok(service.updateService(id,newService));
-
     }
+    @PatchMapping("/{id}")
+    private ResponseEntity<Void> setParent(@PathVariable Long id,@RequestBody Long branch_id){
+        service.setParentId(id,branch_id);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{id}")
     private ResponseEntity<Void> deleteService(@PathVariable Long id){
         service.deleteService(id);

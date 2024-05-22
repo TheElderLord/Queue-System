@@ -36,13 +36,8 @@ public class BranchController {
 
     @PutMapping("/{id}")
     public ResponseEntity<BranchDto> updateBranch(@PathVariable Long id, @RequestBody BranchDto branchDto) {
-        boolean updated = branchService.updateBranch(id, branchDto);
-        if (updated) {
-            BranchDto updatedBranch = branchService.getBranchById(id);
-            return new ResponseEntity<>(updatedBranch, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+       BranchDto updatedBranch = branchService.updateBranch(id, branchDto);
+       return ResponseEntity.status(HttpStatus.CREATED).body(updatedBranch);
     }
 
     @DeleteMapping("/{id}")

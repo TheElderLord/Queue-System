@@ -21,7 +21,16 @@ public class WindowController {
     @GetMapping
     public ResponseEntity<List<WindowDto>> getWindows() {
         List<WindowDto> windows = windowService.getWindows();
-
+        return ResponseEntity.ok(windows);
+    }
+    @GetMapping("/active")
+    public ResponseEntity<List<WindowDto>> getActiveWindows() {
+        List<WindowDto> windows = windowService.getActiveWindows();
+        return ResponseEntity.ok(windows);
+    }
+    @GetMapping("/inactive")
+    public ResponseEntity<List<WindowDto>> getInactiveWindows() {
+        List<WindowDto> windows = windowService.getInactiveWindows();
         return ResponseEntity.ok(windows);
     }
 

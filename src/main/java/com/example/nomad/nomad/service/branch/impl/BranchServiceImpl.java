@@ -41,20 +41,19 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public boolean updateBranch(Long id, BranchDto newBranchDto) {
+    public BranchDto updateBranch(Long id, BranchDto newBranchDto) {
         Branch existingBranch = getEntityById(id);
-        if (existingBranch != null) {
-            existingBranch.setName(newBranchDto.getName());
-            existingBranch.setDescription(newBranchDto.getDescription());
+        existingBranch.setName(newBranchDto.getName());
+        existingBranch.setDescription(newBranchDto.getDescription());
 
-            if (newBranchDto.getParentId() != null) {
-                Branch parentBranch = getEntityById(newBranchDto.getParentId());
-                existingBranch.setParent(parentBranch);
-            }
-            branchRepository.save(existingBranch);
-            return true;
+        if (newBranchDto.getParentId() != null) {
+            Branch parentBranch = getEntityById(newBranchDto.getParentId());
+            existingBranch.setParent(parentBranch);
+
         }
-        return false;
+
+        return BranchMapper.toDto(branchRepository.save(existingBranch));
+
     }
 
     @Override

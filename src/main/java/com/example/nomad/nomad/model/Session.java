@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,9 +23,9 @@ public class Session {
     @Enumerated(EnumType.STRING)
     private SessionStatus status=SessionStatus.ONNLINE;
     @Column(name = "start_time",nullable = false)
-    private LocalDate startTime = LocalDate.now();
+    private LocalDateTime startTime;
     @Column(name = "end_time")
-    private LocalDate endTime;
+    private LocalDateTime endTime;
     @Column(name = "active",nullable = false, columnDefinition = "boolean default false")
     private boolean active;
     @ManyToOne

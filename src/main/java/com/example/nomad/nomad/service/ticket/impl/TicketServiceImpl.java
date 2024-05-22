@@ -7,10 +7,8 @@ import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.TicketMapper;
 import com.example.nomad.nomad.mapper.WindowMapper;
 import com.example.nomad.nomad.model.*;
-import com.example.nomad.nomad.repository.ServiceRepository;
 import com.example.nomad.nomad.repository.TicketRepository;
 import com.example.nomad.nomad.service.branch.BranchService;
-import com.example.nomad.nomad.service.serviceModel.ServService;
 import com.example.nomad.nomad.service.serviceModel.impl.ServiceServiceImpl;
 import com.example.nomad.nomad.service.session.SessionService;
 import com.example.nomad.nomad.service.ticket.TicketService;
@@ -19,6 +17,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -42,22 +41,22 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<TicketDto> getTicketsBySessionId(Long id) {
-        return ticketRepository.getAllBySessionId(id).stream().map(TicketMapper::toDto).collect(Collectors.toList());
+        return ticketRepository.findAllBySessionId(id).stream().map(TicketMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<TicketDto> getTicketsByServiceModelId(Long id) {
-        return ticketRepository.getAllByServiceModelId(id).stream().map(TicketMapper::toDto).collect(Collectors.toList());
+        return ticketRepository.findAllByServiceModelId(id).stream().map(TicketMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<TicketDto> getTicketsByBranchId(Long id) {
-        return ticketRepository.getAllByBranchId(id).stream().map(TicketMapper::toDto).collect(Collectors.toList());
+        return ticketRepository.findAllByBranchId(id).stream().map(TicketMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<TicketDto> getTicketsByStatus(TicketStatus status) {
-        return ticketRepository.getAllByStatus(status).stream()
+        return ticketRepository.findAllByStatus(status).stream()
                 .map(TicketMapper::toDto).collect(Collectors.toList());
     }
 
@@ -94,7 +93,7 @@ public class TicketServiceImpl implements TicketService {
 
         ticket.setTicketNumber(20);
         ticket.setStatus(TicketStatus.NEW);
-        ticket.setRegistrationTime(LocalDate.now());
+        ticket.setRegistrationTime(LocalDateTime.now());
         ticket.setBranch(branch);
         ticket.setSession(session);
         ticket.setServiceModel(serviceModel);

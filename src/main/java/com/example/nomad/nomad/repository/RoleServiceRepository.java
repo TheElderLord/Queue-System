@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface RoleServiceRepository extends JpaRepository<RoleServiceModel,Long> {
 
-    List<RoleServiceModel> findAllById(Long id);
+//    List<RoleServiceModel> findAllById(Long id);
     List<RoleServiceModel> findAllByRoleId(Long id);
 
     List<RoleServiceModel> findAllByBranchId(Long id);

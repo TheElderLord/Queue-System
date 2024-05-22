@@ -40,11 +40,11 @@ public class RoleServiceServiceImpl implements RoleServiceService {
                 .map(RoleServiceMapper::toDto).collect(Collectors.toList());
     }
 
-    @Override
-    public List<RoleServiceDto> getRoleServicesById(Long id) {
-        return roleServiceRepository.findAllById(id).stream()
-                .map(RoleServiceMapper::toDto).collect(Collectors.toList());
-    }
+//    @Override
+//    public List<RoleServiceDto> getRoleServicesById(Long id) {
+//        return roleServiceRepository.findAllById(id).stream()
+//                .map(RoleServiceMapper::toDto).collect(Collectors.toList());
+//    }
 
     @Override
     public RoleServiceDto getRoleServiceById(Long id) {

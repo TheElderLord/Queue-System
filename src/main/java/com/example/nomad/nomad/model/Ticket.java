@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,13 +37,13 @@ public class Ticket {
 
 
     @Column(name = "registration_time")
-    private LocalDate registrationTime;
+    private LocalDateTime registrationTime;
 
     @Column(name = "service_start_time")
-    private LocalDate serviceStartTime;
+    private LocalDateTime serviceStartTime;
 
     @Column(name = "service_end_time")
-    private LocalDate serviceEndTime;
+    private LocalDateTime serviceEndTime;
 
 
     @Column(name = "status",nullable = false)
@@ -50,7 +51,7 @@ public class Ticket {
     private TicketStatus status;
 
     @Column(name = "booking_time")
-    private LocalDate bookingTime;
+    private LocalDateTime bookingTime;
 
     @Column(name = "booking_code")
     private Long bookingCode;

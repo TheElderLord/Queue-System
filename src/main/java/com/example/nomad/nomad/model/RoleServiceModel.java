@@ -26,7 +26,7 @@ public class RoleServiceModel {
     @JoinColumn(name = "role_id",nullable = false)
     private Role role;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     @JoinColumn(name = "service_id",nullable = false)
     private ServiceModel serviceModel;

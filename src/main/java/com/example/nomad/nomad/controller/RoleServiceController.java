@@ -27,9 +27,6 @@ public class RoleServiceController {
     @GetMapping("/{id}")
     private ResponseEntity<RoleServiceDto> getRoleServiceById(@PathVariable Long id){
         RoleServiceDto roleServiceModel = roleServiceService.getRoleServiceById(id);
-        if(roleServiceModel ==null){
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(roleServiceModel);
     }
     @GetMapping("/role/{id}")

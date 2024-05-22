@@ -7,23 +7,23 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 public class TicketDto {
     private Long id;
-//    private int ticketNumber;
+    private int ticketNumber;
     private Long serviceId;
     private Long sessionId;
     private Long branchId;
-//    private LocalDate registrationTime;
-//    private LocalDate serviceStartTime;
-//    private LocalDate serviceEndTime;
-//    @NonNull
+    private LocalDateTime registrationTime;
+    private LocalDateTime serviceStartTime;
+    private LocalDateTime serviceEndTime;
     private TicketStatus status;
-    private LocalDate bookingTime;
-    private int bookingCode;
-//    private boolean isDirected;
+    private LocalDateTime bookingTime;
+    private Long bookingCode;
+    private boolean isDirected;
     private Long redirectedWindowId;
     private String agent;
     private int rating;

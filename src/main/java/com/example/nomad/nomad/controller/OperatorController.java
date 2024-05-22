@@ -17,9 +17,14 @@ public class OperatorController {
     private final OperatorService operatorService;
 
     @GetMapping
-    public ResponseEntity<List<OperatorDto>> getAllOperators() {
-        List<OperatorDto> operators = operatorService.getOperators();
-        return ResponseEntity.ok(operators);
+    public ResponseEntity<List<OperatorDto>> getAllOperators(@RequestParam(required = false) Boolean active) {
+        if(active != null){
+            if(active){
+                return ResponseEntity.ok(operatorService.getOnlineOperators());
+            }
+            else return ResponseEntity.ok(operatorService.getOfflineOperators());
+        }
+        return ResponseEntity.ok(operatorService.getOperators());
     }
 
     @GetMapping("/{id}")

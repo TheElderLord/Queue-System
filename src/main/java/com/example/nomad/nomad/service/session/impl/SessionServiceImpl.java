@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,14 +52,13 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public List<SessionDto> getSessionByWindowId(Long id) {
+    public List<SessionDto> getSessionsByWindowId(Long id) {
         return sessionRepository.findAllByWindowId(id).stream().map(SessionMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<SessionDto> getActiveSessions() {
         return sessionRepository.findAllByActive(true).stream().map(SessionMapper::toDto).collect(Collectors.toList());
-
     }
 
     @Override
@@ -76,6 +76,11 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public SessionDto getSessionById(Long id) {
         return SessionMapper.toDto(getEntityById(id));
+    }
+
+    @Override
+    public List<SessionDto> getSessionsByStatus(SessionStatus sessionStatus) {
+        return sessionRepository.findAllByStatus(sessionStatus).stream().map(SessionMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -124,7 +129,7 @@ public class SessionServiceImpl implements SessionService {
 
         session.setActive(true);
         session.setStatus(SessionStatus.ONNLINE);
-        session.setStartTime(LocalDate.now());
+        session.setStartTime(LocalDateTime.now());
         session.setBranch(branch);
         session.setOperator(operator);
         session.setWindow(window);
@@ -133,13 +138,18 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public SessionDto stopASession(Long id) {
+    public SessionDto stopASession(Long id,SessionStatus sessionStatus) {
         Session session = getEntityById(id);
+
         if(!session.isActive()){
             throw new ForbiddenActionException("The session is already finished");
         }
-        session.setEndTime(LocalDate.now());
+        windowService.setInactive(session.getWindow().getId());
+        operatorService.setInactive(session.getOperator().getId());
+        session.setStatus(sessionStatus);
+        session.setEndTime(LocalDateTime.now());
         session.setActive(false);
+
         sessionRepository.save(session);
         return null;
     }
