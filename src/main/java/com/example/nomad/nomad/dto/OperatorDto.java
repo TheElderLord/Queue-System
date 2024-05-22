@@ -1,6 +1,7 @@
 package com.example.nomad.nomad.dto;
 
 
+import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -9,9 +10,7 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class OperatorDto {
     private Long id;
-    @NonNull
     private String name;
-    @NonNull
     private String lastname;
     private Long roleId;
     private boolean active;

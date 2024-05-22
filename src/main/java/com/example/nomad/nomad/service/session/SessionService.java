@@ -4,6 +4,7 @@ import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.SessionDto;
 import com.example.nomad.nomad.model.Session;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface SessionService {
@@ -21,11 +22,14 @@ public interface SessionService {
     List<ServiceModelDto> getAvailableServices();
     //Get
 
-    //Simple Post Put
-    SessionDto createSession(SessionDto newSession);
+
+
+
+    SessionDto startASession(SessionDto newSession);
+    SessionDto stopASession(Long id);
     SessionDto updateSession(Long id, SessionDto newSessionBody);
+
     void deleteSession(Long id);
-    //Simple Post Put
 
 
 

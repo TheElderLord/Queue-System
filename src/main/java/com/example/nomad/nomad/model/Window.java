@@ -15,24 +15,19 @@ public class Window {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
+    @Column(name = "window_num",nullable = false)
+    private Long number;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "branch_id")
+    @JoinColumn(name = "branch_id",nullable = false)
     private Branch branch;
 
+//    @Column(name = "status")
+//    private String status;
 
-    @NonNull
-    @Column(name = "status")
-    private String status;
-
-    @NonNull
-    @Column(name = "name")
+    @Column(name = "name",nullable = false)
     private String name;
-
-    @NonNull
-    @Column(name = "active",columnDefinition = "boolean default false")
+    @Column(name = "active",nullable = false,columnDefinition = "boolean default false")
     private boolean active;
-
     private String description;
 
 

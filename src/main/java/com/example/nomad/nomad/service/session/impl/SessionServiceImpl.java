@@ -1,13 +1,14 @@
 package com.example.nomad.nomad.service.session.impl;
 
+import com.example.nomad.nomad.Enum.SessionStatus;
 import com.example.nomad.nomad.dto.*;
+import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.SessionMapper;
 import com.example.nomad.nomad.model.*;
 import com.example.nomad.nomad.repository.SessionRepository;
 import com.example.nomad.nomad.service.branch.BranchService;
 import com.example.nomad.nomad.service.operator.OperatorService;
-import com.example.nomad.nomad.service.role.RoleService;
 import com.example.nomad.nomad.service.roleService.RoleServiceService;
 import com.example.nomad.nomad.service.serviceModel.ServService;
 import com.example.nomad.nomad.service.session.SessionService;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,12 +26,15 @@ import java.util.stream.Collectors;
 @Primary
 @AllArgsConstructor
 public class SessionServiceImpl implements SessionService {
-    private SessionRepository sessionRepository;
-    private OperatorService operatorService;
-    private RoleServiceService roleServiceService;
-    private ServService servService;
-    private BranchService branchService;
-    private WindowService windowService;
+    private final SessionRepository sessionRepository;
+
+    private final OperatorService operatorService;
+    private final RoleServiceService roleServiceService;
+    private final ServService servService;
+    private final BranchService branchService;
+    private final WindowService windowService;
+
+    //GET METHODS
     @Override
     public List<SessionDto> getSessions() {
         return sessionRepository.findAll().stream().map(SessionMapper::toDto).collect(Collectors.toList());
@@ -61,6 +66,7 @@ public class SessionServiceImpl implements SessionService {
         return sessionRepository.findAllByActive(false).stream().map(SessionMapper::toDto).collect(Collectors.toList());
 
     }
+
 
     @Override
     public boolean isSessionActive(Long id) {
@@ -97,26 +103,48 @@ public class SessionServiceImpl implements SessionService {
 
         // Extract service models from available services
         List<ServiceModelDto> serviceModels = availableServiceIds.stream()
-                .map(serviceId->servService.getServiceById(serviceId))
+                .map(servService::getServiceById)
                 .distinct()  // Ensure distinct service models
                 .collect(Collectors.toList());
 
         return serviceModels;
     }
+    //GET METHODS
 
 
     @Override
-    public SessionDto createSession(SessionDto newSession) {
+    public SessionDto startASession(SessionDto newSession) {
         Session session = SessionMapper.toEntity(newSession);
         Branch branch = branchService.getEntityById(newSession.getBranchId());
         Operator operator = operatorService.getEntityById(newSession.getOperatorId());
         Window window = windowService.getEntityById(newSession.getWindowId());
 
+        windowService.setActive(newSession.getWindowId());
+        operatorService.setActive(newSession.getOperatorId());
+
+        session.setActive(true);
+        session.setStatus(SessionStatus.ONNLINE);
+        session.setStartTime(LocalDate.now());
         session.setBranch(branch);
         session.setOperator(operator);
         session.setWindow(window);
+        sessionRepository.save(session);
         return SessionMapper.toDto(session);
     }
+
+    @Override
+    public SessionDto stopASession(Long id) {
+        Session session = getEntityById(id);
+        if(!session.isActive()){
+            throw new ForbiddenActionException("The session is already finished");
+        }
+        session.setEndTime(LocalDate.now());
+        session.setActive(false);
+        sessionRepository.save(session);
+        return null;
+    }
+
+
 
     @Override
     public SessionDto updateSession(Long id, SessionDto newSessionBody) {
@@ -136,10 +164,14 @@ public class SessionServiceImpl implements SessionService {
         sessionRepository.deleteById(id);
     }
 
+
+
+
+
     @Override
     public Session getEntityById(Long id) {
         return sessionRepository.findById(id).orElseThrow(
-                ()->new ResourceNotFoundException("The service does not exist")
+                ()->new ResourceNotFoundException("The session does not exist")
         );
     }
 }

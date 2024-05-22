@@ -16,16 +16,11 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
-
-    @NonNull
     @Column(name = "name",nullable = false)
     private String name;
-
     @Column(name = "description")
     private String description;
-
-    @NonNull
-    @Column(name = "priority")
+    @Column(name = "priority",nullable = false)
     private String priority;
 
     public Role(Long roleId) {

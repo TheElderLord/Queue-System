@@ -45,6 +45,19 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     @Override
+    public void setActive(Long id) {
+        Operator operator = getEntityById(id);
+        operator.setActive(true);
+        operatorRepository.save(operator);
+    }
+    @Override
+    public void setInactive(Long id) {
+        Operator operator = getEntityById(id);
+        operator.setActive(false);
+        operatorRepository.save(operator);
+    }
+
+    @Override
     public OperatorDto getOperatorById(Long id) {
         return OperatorMapper.toDto(getEntityById(id));
     }

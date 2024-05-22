@@ -1,22 +1,15 @@
 package com.example.nomad.nomad.dto;
 
+import com.example.nomad.nomad.Enum.SessionStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 public class SessionDto {
     private Long id;
-    @NonNull
-    private String status;
-    @NonNull
-    private LocalDate startTime;
-
-    private LocalDate endTime;
-    @NonNull
+    private SessionStatus status;
     private boolean isActive;
     private Long operatorId;
     private Long windowId;

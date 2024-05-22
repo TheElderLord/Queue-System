@@ -8,9 +8,7 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class RoleDto {
     private Long id;
-    @NonNull
     private String name;
     private String description;
-    @NonNull
     private String priority;
 }

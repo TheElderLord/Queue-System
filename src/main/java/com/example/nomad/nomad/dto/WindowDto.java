@@ -1,5 +1,6 @@
 package com.example.nomad.nomad.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -9,10 +10,9 @@ import lombok.NonNull;
 public class WindowDto {
     private Long id;
     private Long branchId;
-    @NonNull
-    private String status;
-    @NonNull
+    private Long number;
     private String name;
     private String description;
     private boolean active;
+
 }

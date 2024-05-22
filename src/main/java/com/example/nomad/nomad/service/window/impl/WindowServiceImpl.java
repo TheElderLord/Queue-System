@@ -21,8 +21,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class WindowServiceImpl implements WindowService {
     private final WindowRepository windowRepository;
+
     private final BranchService branchService;
-    private final SessionService sessionService;
+//    private final SessionService sessionService;
 
     @Override
     public List<WindowDto> getWindows() {
@@ -40,6 +41,20 @@ public class WindowServiceImpl implements WindowService {
     @Override
     public boolean isWindowActive(Long id) {
         return getEntityById(id).isActive();
+    }
+
+    @Override
+    public void setActive(Long id) {
+        Window window = getEntityById(id);
+        window.setActive(true);
+        windowRepository.save(window);
+    }
+
+    @Override
+    public void setInactive(Long id) {
+        Window window = getEntityById(id);
+        window.setActive(false);
+        windowRepository.save(window);
     }
 
     @Override

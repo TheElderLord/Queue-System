@@ -20,11 +20,9 @@ public class ServiceController {
     @GetMapping
     private ResponseEntity<List<ServiceModelDto>> getServices(){
         List<ServiceModelDto> list = service.getServices();
-        if(list==null){
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(list);
     }
+
     @GetMapping("/{id}")
     private ResponseEntity<ServiceModelDto> getServiceById(@PathVariable Long id){
         ServiceModelDto serviceModel = service.getServiceById(id);

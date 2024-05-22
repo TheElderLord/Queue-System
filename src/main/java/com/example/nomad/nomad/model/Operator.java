@@ -16,19 +16,12 @@ public class Operator {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
-
-    @NonNull
     @Column(name = "name",nullable = false)
     private String name;
-
-    @NonNull
-    @Column(name = "lastname",nullable = false,columnDefinition = "boolean default false")
+    @Column(name = "lastname")
     private String lastname;
-
-    @NonNull
-    @Column(name = "active",nullable = false)
+    @Column(name = "active",nullable = false,columnDefinition = "boolean default false")
     private boolean active;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id",nullable = false)
     private Role role;

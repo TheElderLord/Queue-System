@@ -22,9 +22,6 @@ public class RoleServiceController {
     @GetMapping
     private ResponseEntity<List<RoleServiceDto>> getRoleServices(){
         List<RoleServiceDto> roleServiceModels = roleServiceService.getRoleServices();
-        if(roleServiceModels.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(roleServiceModels);
     }
     @GetMapping("/{id}")

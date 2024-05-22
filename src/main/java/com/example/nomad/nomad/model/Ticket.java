@@ -1,5 +1,6 @@
 package com.example.nomad.nomad.model;
 
+import com.example.nomad.nomad.Enum.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,21 +17,21 @@ import java.time.LocalDate;
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private Long id;
 
-    @Column(name = "ticket_number")
+    @Column(name = "ticket_number",nullable = false)
     private int ticketNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_id")
+    @JoinColumn(name = "service_id",nullable = false)
     private ServiceModel serviceModel;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "window_id")
-    private Window window;
+    @JoinColumn(name = "window_id",nullable = false)
+    private Session session;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "branch_id")
+    @JoinColumn(name = "branch_id",nullable = false)
     private Branch branch;
 
 
@@ -43,18 +44,19 @@ public class Ticket {
     @Column(name = "service_end_time")
     private LocalDate serviceEndTime;
 
-    @NonNull
-    @Column(name = "status")
-    private String status;
+
+    @Column(name = "status",nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TicketStatus status;
 
     @Column(name = "booking_time")
     private LocalDate bookingTime;
 
     @Column(name = "booking_code")
-    private int bookingCode;
+    private Long bookingCode;
 
-    @NonNull
-    @Column(name = "is_redirected")
+
+    @Column(name = "is_redirected",nullable = false, columnDefinition = "boolean default false")
     private boolean isDirected;
 
     @ManyToOne

@@ -8,10 +8,7 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class RoleServiceDto {
     private Long id;
-    @NonNull
     private Long branchId;
-    @NonNull
     private Long roleId;
-    @NonNull
     private Long serviceId;
 }

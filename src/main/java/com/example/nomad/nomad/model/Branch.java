@@ -16,14 +16,10 @@ public class Branch {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
-
-    @NonNull
     @Column(name = "name", nullable = false)
     private String name;
-
     @Column(name = "description")
     private String description;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Branch parent;

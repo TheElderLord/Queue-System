@@ -6,11 +6,14 @@ import com.example.nomad.nomad.mapper.ServiceModelMapper;
 import com.example.nomad.nomad.model.ServiceModel;
 import com.example.nomad.nomad.repository.ServiceRepository;
 import com.example.nomad.nomad.service.serviceModel.ServService;
+import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
 import lombok.AllArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +21,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ServiceServiceImpl implements ServService {
     private ServiceRepository serviceRepository;
+
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
+
 
     @Override
     public List<ServiceModelDto> getServices() {
@@ -45,8 +51,6 @@ public class ServiceServiceImpl implements ServService {
         if(service!=null){
             service.setName(newServiceBodyModel.getName());
             service.setDescription(newServiceBodyModel.getDescription());
-            service.setMaxServTime(newServiceBodyModel.getMaxServTime());
-            service.setMaxWaitTime(newServiceBodyModel.getMaxWaitTime());
             service.setPriority(newServiceBodyModel.getPriority());
             if(newServiceBodyModel.getParentId()!=null){
                 ServiceModel parent= getEntityById(newServiceBodyModel.getParentId());;
@@ -75,8 +79,13 @@ public class ServiceServiceImpl implements ServService {
         }
     }
     public ServiceModel getEntityById(Long id){
-        return serviceRepository.findById(id).orElseThrow(
-                ()->new ResourceNotFoundException("The service does not exist")
+        logger.info("Searching id:" + id);
+//        ServiceModel serviceModel = serviceRepository.findById(id).orElseThrow(
+//                ()->new ResourceNotFoundException("The service does not exist")
+//        );
+        ServiceModel serviceModel = serviceRepository.findById(id).orElseThrow(null
         );
+        logger.info("Found:"+serviceModel);
+        return serviceModel;
     }
 }
