@@ -9,17 +9,21 @@ public class TicketMapper {
             return null;
         }
         TicketDto dto = new TicketDto();
-//        dto.setId(ticket.getId());
+        dto.setId(ticket.getId());
         dto.setTicketNumber(ticket.getTicketNumber());
         if (ticket.getServiceModel() != null) {
             dto.setServiceId(ticket.getServiceModel().getId());
+            dto.setServiceName(ticket.getServiceModel().getName());
         }
         if (ticket.getSession() != null) {
             dto.setSessionId(ticket.getSession().getId());
+            dto.setWindowNum(ticket.getSession().getWindow().getNumber());
         }
         if (ticket.getBranch() != null) {
             dto.setBranchId(ticket.getBranch().getId());
+            dto.setBranchName(ticket.getBranch().getName());
         }
+
         dto.setRegistrationTime(ticket.getRegistrationTime());
         dto.setServiceStartTime(ticket.getServiceStartTime());
         dto.setServiceEndTime(ticket.getServiceEndTime());
@@ -29,6 +33,7 @@ public class TicketMapper {
         dto.setDirected(ticket.isDirected());
         if (ticket.getRedirectedWindow() != null) {
             dto.setRedirectedWindowId(ticket.getRedirectedWindow().getId());
+            dto.setRedirectedWindowNumber(ticket.getRedirectedWindow().getNumber());
         }
         dto.setAgent(ticket.getAgent());
         dto.setRating(ticket.getRating());

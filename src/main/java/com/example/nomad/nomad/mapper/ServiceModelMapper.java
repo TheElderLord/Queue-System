@@ -17,6 +17,7 @@ public class ServiceModelMapper {
         dto.setPriority(service.getPriority());
         if (service.getParentService() != null) {
             dto.setParentId(service.getParentService().getId());
+            dto.setParentName(service.getParentService().getName());
         }
         return dto;
     }

@@ -15,6 +15,7 @@ public class OperatorMapper {
         dto.setActive(operator.isActive());
         if (operator.getRole() != null) {
             dto.setRoleId(operator.getRole().getId());
+            dto.setRoleName(operator.getRole().getName());
         }
         return dto;
     }

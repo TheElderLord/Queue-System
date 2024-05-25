@@ -16,12 +16,16 @@ public class SessionMapper {
         dto.setActive(session.isActive());
         if (session.getOperator() != null) {
             dto.setOperatorId(session.getOperator().getId());
+            dto.setOperatorName(session.getOperator().getName());
         }
         if (session.getWindow() != null) {
             dto.setWindowId(session.getWindow().getId());
+            dto.setWindowNumber(session.getWindow().getNumber());
+            dto.setWindowName(session.getWindow().getName());
         }
         if (session.getBranch() != null) {
             dto.setBranchId(session.getBranch().getId());
+            dto.setBranchName(session.getBranch().getName());
         }
         return dto;
     }

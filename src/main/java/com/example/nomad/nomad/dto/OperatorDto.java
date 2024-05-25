@@ -13,6 +13,7 @@ public class OperatorDto {
     private String name;
     private String lastname;
     private Long roleId;
+    private String roleName;
     private boolean active;
 }
 

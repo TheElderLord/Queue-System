@@ -1,6 +1,7 @@
 package com.example.nomad.nomad.controller;
 
 
+import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.TicketDto;
 import com.example.nomad.nomad.mapper.TicketMapper;
 import com.example.nomad.nomad.service.ticket.TicketService;
@@ -21,6 +22,11 @@ public class TicketController {
     @GetMapping
     private ResponseEntity<List<TicketDto>> getTickets(){
         return ResponseEntity.ok(ticketService.getTickets());
+    }
+    @GetMapping("/available-services")
+    private ResponseEntity<List<ServiceModelDto>> getAvailable(){
+        List<ServiceModelDto> services = ticketService.getAvailableServices();
+        return ResponseEntity.ok(services);
     }
     @PostMapping
     private ResponseEntity<TicketDto> createTicket(@RequestBody TicketDto ticketDto){

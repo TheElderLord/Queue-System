@@ -30,8 +30,7 @@ public class SessionServiceImpl implements SessionService {
     private final SessionRepository sessionRepository;
 
     private final OperatorService operatorService;
-    private final RoleServiceService roleServiceService;
-    private final ServService servService;
+
     private final BranchService branchService;
     private final WindowService windowService;
 
@@ -67,12 +66,6 @@ public class SessionServiceImpl implements SessionService {
 
     }
 
-
-    @Override
-    public boolean isSessionActive(Long id) {
-        return getEntityById(id).isActive();
-    }
-
     @Override
     public SessionDto getSessionById(Long id) {
         return SessionMapper.toDto(getEntityById(id));
@@ -84,49 +77,34 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public List<ServiceModelDto> getAvailableServices() {
-        // Get a list of active operators
-        List<OperatorDto> activeOperators = operatorService.getOnlineOperators();
-
-        // If no active operators, return an empty list of services
-        if (activeOperators.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        // Extract the IDs of roles of active operators
-        List<Long> roleIds = activeOperators.stream()
-                .map(OperatorDto::getRoleId)
-                .distinct()  // Ensure distinct role IDs
-                .toList();
-
-        // Fetch available services based on the role IDs
-        List<Long> availableServiceIds = roleIds.stream()
-                .flatMap(roleId -> roleServiceService.getRoleServicesByRoleId(roleId).stream())
-                .distinct()
-                .map(RoleServiceDto::getServiceId)// Ensure distinct services
-                .toList();
-
-        // Extract service models from available services
-        List<ServiceModelDto> serviceModels = availableServiceIds.stream()
-                .map(servService::getServiceById)
-                .distinct()  // Ensure distinct service models
-                .collect(Collectors.toList());
-
-        return serviceModels;
+    public Session getSessionWithLeastTicketsAndService(Long serviceId) {
+        return sessionRepository.findSessionWithLeastTicketsByServiceModel(serviceId).get(0);
     }
+
+    @Override
+    public boolean isSessionActive(Long id) {
+        return getEntityById(id).isActive();
+    }
+
+
+
     //GET METHODS
 
 
     @Override
     public SessionDto startASession(SessionDto newSession) {
+
         Session session = SessionMapper.toEntity(newSession);
         Branch branch = branchService.getEntityById(newSession.getBranchId());
         Operator operator = operatorService.getEntityById(newSession.getOperatorId());
+        List<Session> activeOperatorSessions = sessionRepository.findByOperatorIdAndActive(operator.getId(),true);
+        if(!activeOperatorSessions.isEmpty()){
+           throw  new ForbiddenActionException("Operator already has a active session");
+        }
         Window window = windowService.getEntityById(newSession.getWindowId());
 
         windowService.setActive(newSession.getWindowId());
         operatorService.setActive(newSession.getOperatorId());
-
         session.setActive(true);
         session.setStatus(SessionStatus.ONNLINE);
         session.setStartTime(LocalDateTime.now());

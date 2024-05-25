@@ -1,6 +1,7 @@
 package com.example.nomad.nomad.service.ticket;
 
 import com.example.nomad.nomad.Enum.TicketStatus;
+import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.TicketDto;
 import com.example.nomad.nomad.dto.WindowDto;
 import com.example.nomad.nomad.model.Ticket;
@@ -9,6 +10,7 @@ import java.util.List;
 
 public interface TicketService {
     List<TicketDto> getTickets();
+    List<ServiceModelDto> getAvailableServices();
     List<TicketDto> getTicketsBySessionId(Long id);
     List<TicketDto> getTicketsByServiceModelId(Long id);
     List<TicketDto> getTicketsByBranchId(Long id);

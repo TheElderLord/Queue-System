@@ -14,6 +14,7 @@ public class BranchMapper {
         dto.setDescription(branch.getDescription());
         if (branch.getParent() != null) {
             dto.setParentId(branch.getParent().getId());
+            dto.setParentName(branch.getParent().getName());
         }
         return dto;
     }

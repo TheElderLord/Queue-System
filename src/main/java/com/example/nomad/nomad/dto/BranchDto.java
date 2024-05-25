@@ -13,4 +13,6 @@ public class BranchDto {
     private String name;
     private String description;
     private Long parentId;
+    private String parentName;
+
 }

@@ -15,16 +15,20 @@ public class TicketDto {
     private Long id;
     private int ticketNumber;
     private Long serviceId;
+    private String serviceName;
     private Long sessionId;
+    private Long windowNum;
     private Long branchId;
+    private String branchName;
     private LocalDateTime registrationTime;
     private LocalDateTime serviceStartTime;
     private LocalDateTime serviceEndTime;
     private TicketStatus status;
     private LocalDateTime bookingTime;
     private Long bookingCode;
-    private boolean isDirected;
+    private boolean directed;
     private Long redirectedWindowId;
+    private Long redirectedWindowNumber;
     private String agent;
     private int rating;
 }

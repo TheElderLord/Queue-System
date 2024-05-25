@@ -4,6 +4,7 @@ import com.example.nomad.nomad.Enum.SessionStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.SessionDto;
 import com.example.nomad.nomad.service.session.SessionService;
+import com.example.nomad.nomad.service.session.impl.SessionServiceImpl;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
 import lombok.AllArgsConstructor;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,11 @@ public class SessionController {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
 
+
     @GetMapping
     private ResponseEntity<List<SessionDto>> getSessions(@RequestParam(required = false) SessionStatus sessionStatus,
                                                          @RequestParam(required = false) Boolean active){
+
 //        logger.info(String.valueOf(sessionStatus));
         if(sessionStatus !=null){
 //            logger.info(String.valueOf("Not null:"+sessionStatus));
@@ -53,11 +56,7 @@ public class SessionController {
     ResponseEntity<List<SessionDto>> getSessionByWindowId(@PathVariable Long id){
         return ResponseEntity.ok(service.getSessionsByWindowId(id));
     }
-    @GetMapping("/available-services")
-    private ResponseEntity<List<ServiceModelDto>> getAvailable(){
-        List<ServiceModelDto> services = service.getAvailableServices();
-        return ResponseEntity.ok(services);
-    }
+
 //    @GetMapping("/active")
 //    private ResponseEntity<List<SessionDto>> getActiveSessions(){
 //        return ResponseEntity.ok(service.getActiveSessions());

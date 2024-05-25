@@ -20,13 +20,12 @@ public interface SessionService {
     SessionDto getSessionById(Long id);
     List<SessionDto> getSessionsByStatus(SessionStatus sessionStatus);
 
+    Session getSessionWithLeastTicketsAndService(Long serviceId);
+
     boolean isSessionActive(Long id);
 
-    List<ServiceModelDto> getAvailableServices();
+
     //Get
-
-
-
 
     SessionDto startASession(SessionDto newSession);
     SessionDto stopASession(Long id,SessionStatus sessionStatus);

@@ -12,6 +12,7 @@ public class WindowMapper {
         dto.setId(window.getId());
         if (window.getBranch() != null) {
             dto.setBranchId(window.getBranch().getId());
+            dto.setBranchName(window.getBranch().getName());
         }
 //        dto.setStatus(window.getStatus());
         dto.setName(window.getName());

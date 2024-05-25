@@ -12,6 +12,8 @@ public class ServiceModelDto {
     private String description;
 //    private Long maxServTime;
 //    private Long maxWaitTime;
+    private String parentName;
     private Long priority;
     private Long parentId;
+
 }

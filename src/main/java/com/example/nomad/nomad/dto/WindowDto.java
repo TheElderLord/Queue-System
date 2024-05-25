@@ -10,6 +10,7 @@ import lombok.NonNull;
 public class WindowDto {
     private Long id;
     private Long branchId;
+    private String branchName;
     private Long number;
     private String name;
     private String description;

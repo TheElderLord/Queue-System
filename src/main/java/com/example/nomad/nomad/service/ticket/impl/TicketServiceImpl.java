@@ -1,14 +1,16 @@
 package com.example.nomad.nomad.service.ticket.impl;
 
 import com.example.nomad.nomad.Enum.TicketStatus;
-import com.example.nomad.nomad.dto.TicketDto;
-import com.example.nomad.nomad.dto.WindowDto;
+import com.example.nomad.nomad.dto.*;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.TicketMapper;
 import com.example.nomad.nomad.mapper.WindowMapper;
 import com.example.nomad.nomad.model.*;
 import com.example.nomad.nomad.repository.TicketRepository;
 import com.example.nomad.nomad.service.branch.BranchService;
+import com.example.nomad.nomad.service.operator.OperatorService;
+import com.example.nomad.nomad.service.roleService.RoleServiceService;
+import com.example.nomad.nomad.service.serviceModel.ServService;
 import com.example.nomad.nomad.service.serviceModel.impl.ServiceServiceImpl;
 import com.example.nomad.nomad.service.session.SessionService;
 import com.example.nomad.nomad.service.ticket.TicketService;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -28,8 +31,9 @@ import org.slf4j.LoggerFactory;
 @AllArgsConstructor
 public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
-
-    private ServiceServiceImpl service;
+    private final OperatorService operatorService;
+    private final RoleServiceService roleServiceService;
+    private final ServService servService;
     private final BranchService branchService;
     private final SessionService sessionService;
     private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
@@ -37,6 +41,38 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<TicketDto> getTickets() {
         return ticketRepository.findAll().stream().map(TicketMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ServiceModelDto> getAvailableServices() {
+        // Get a list of active operators
+        List<OperatorDto> activeOperators = operatorService.getOnlineOperators();
+
+        // If no active operators, return an empty list of services
+        if (activeOperators.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Extract the IDs of roles of active operators
+        List<Long> roleIds = activeOperators.stream()
+                .map(OperatorDto::getRoleId)
+                .distinct()  // Ensure distinct role IDs
+                .toList();
+
+        // Fetch available services based on the role IDs
+        List<Long> availableServiceIds = roleIds.stream()
+                .flatMap(roleId -> roleServiceService.getRoleServicesByRoleId(roleId).stream())
+                .distinct()
+                .map(RoleServiceDto::getServiceId)// Ensure distinct services
+                .toList();
+
+        // Extract service models from available services
+        List<ServiceModelDto> serviceModels = availableServiceIds.stream()
+                .map(servService::getServiceById)
+                .distinct()  // Ensure distinct service models
+                .collect(Collectors.toList());
+
+        return serviceModels;
     }
 
     @Override
@@ -87,9 +123,10 @@ public class TicketServiceImpl implements TicketService {
         logger.info("Creating tickets:"+newTicket);
         Ticket ticket = TicketMapper.toEntity(newTicket);
         Branch branch = branchService.getEntityById(newTicket.getBranchId());
-        Session session = sessionService.getEntityById(newTicket.getSessionId());
+//        Session session = sessionService.getEntityById(newTicket.getSessionId());
 
-        ServiceModel serviceModel = service.getEntityById(newTicket.getServiceId());
+        ServiceModel serviceModel = servService.getEntityById(newTicket.getServiceId());
+        Session session = sessionService.getSessionWithLeastTicketsAndService(serviceModel.getId());
 
         ticket.setTicketNumber(20);
         ticket.setStatus(TicketStatus.NEW);

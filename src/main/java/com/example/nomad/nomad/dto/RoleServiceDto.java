@@ -9,6 +9,9 @@ import lombok.NonNull;
 public class RoleServiceDto {
     private Long id;
     private Long branchId;
+    private String branchName;
     private Long roleId;
+    private String roleName;
     private Long serviceId;
+    private String serviceName;
 }
