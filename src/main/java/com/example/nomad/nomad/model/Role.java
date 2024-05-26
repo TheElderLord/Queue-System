@@ -21,7 +21,7 @@ public class Role {
     @Column(name = "description")
     private String description;
     @Column(name = "priority",nullable = false)
-    private String priority;
+    private Long priority;
 
     public Role(Long roleId) {
         this.id = roleId;

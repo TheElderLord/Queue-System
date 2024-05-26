@@ -19,8 +19,9 @@ public interface SessionService {
     List<SessionDto> getInActiveSessions();
     SessionDto getSessionById(Long id);
     List<SessionDto> getSessionsByStatus(SessionStatus sessionStatus);
+    List<Session> getActiveSessionsByBranchId(Long branchId,boolean active);
 
-    Session getSessionWithLeastTicketsAndService(Long serviceId);
+//    Session getSessionWithLeastTicketsAndService(Long brachId,Long serviceId);
 
     boolean isSessionActive(Long id);
 

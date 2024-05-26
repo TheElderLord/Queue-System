@@ -10,5 +10,5 @@ public class RoleDto {
     private Long id;
     private String name;
     private String description;
-    private String priority;
+    private Long priority;
 }

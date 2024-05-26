@@ -63,9 +63,22 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     @Override
+    public Operator getByLoginAndPassword(String login, String password) {
+        Operator operator = operatorRepository.findByLoginAndPassword(login,password);
+        if(operator==null) throw new ResourceNotFoundException("Operator by login and password does not exist");
+        return operator;
+    }
+
+    @Override
     public List<OperatorDto> getOperatorsByRoleId(Long id) {
         return operatorRepository.findOperatorsByRoleId(id).stream().map(
                 OperatorMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Operator> getActiveOperatorsFromBranchId(Long branchId) {
+
+        return null;
     }
 
     @Override
@@ -84,7 +97,7 @@ public class OperatorServiceImpl implements OperatorService {
         operator.setName(newOperatorBody.getName());
         operator.setLastname(newOperatorBody.getLastname());
         if(newOperatorBody.getRoleId()!=null) {
-            Role role = roleServiceService.getEntityById(id);
+            Role role = roleServiceService.getEntityById(newOperatorBody.getRoleId());
             operator.setRole(role);
         }
         return OperatorMapper.toDto(operatorRepository.save(operator));

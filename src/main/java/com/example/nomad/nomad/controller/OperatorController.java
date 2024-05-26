@@ -1,8 +1,11 @@
 package com.example.nomad.nomad.controller;
 
 import com.example.nomad.nomad.dto.OperatorDto;
+import com.example.nomad.nomad.model.Operator;
 import com.example.nomad.nomad.service.operator.OperatorService;
+import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
 import lombok.AllArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import java.util.List;
 public class OperatorController {
 
     private final OperatorService operatorService;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     @GetMapping
     public ResponseEntity<List<OperatorDto>> getAllOperators(@RequestParam(required = false) Boolean active) {
@@ -47,6 +51,7 @@ public class OperatorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<OperatorDto> updateOperator(@PathVariable Long id, @RequestBody OperatorDto updatedOperator) {
+        logger.info(id+":"+updatedOperator);
         OperatorDto operator = operatorService.updateOperator(id, updatedOperator);
         return ResponseEntity.ok(operator);
     }
@@ -59,5 +64,11 @@ public class OperatorController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+    @PostMapping("/login")
+    public ResponseEntity<Void> operatorLogin(@RequestBody OperatorDto operator) {
+        Operator createdOperator = operatorService.getByLoginAndPassword(operator.getLogin(),operator.getPassword());
+        if(createdOperator==null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

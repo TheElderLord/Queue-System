@@ -10,7 +10,9 @@ public interface OperatorService {
     List<OperatorDto> getOnlineOperators();
     List<OperatorDto> getOfflineOperators();
     List<OperatorDto> getOperatorsByRoleId(Long id);
+    List<Operator> getActiveOperatorsFromBranchId(Long branchId);
     OperatorDto getOperatorById(Long id);
+    Operator getByLoginAndPassword(String login, String password);
     OperatorDto createOperator(OperatorDto newOperator);
     OperatorDto updateOperator(Long id,OperatorDto newOperatorBody);
     boolean deleteOperator(Long id);

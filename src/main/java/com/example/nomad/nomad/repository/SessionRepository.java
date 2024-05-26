@@ -19,14 +19,15 @@ public interface SessionRepository extends JpaRepository<Session,Long> {
     List<Session> findAllByWindowId(Long id);
     List<Session> findAllByActive(boolean active);
     List<Session> findAllByStatus(SessionStatus status);
+    List<Session> findAllByBranchIdAndActive(Long branchId,boolean active);
 
-    @Query("SELECT s FROM Session s WHERE s.id = (SELECT t.session.id FROM Ticket t GROUP BY t.session.id ORDER BY COUNT(t) ASC LIMIT 1)")
-    Session findSessionWithLeastTickets();
-
-    @Query("SELECT t.session FROM Ticket t WHERE t.serviceModel.id = :serviceModelId GROUP BY t.session ORDER BY COUNT(t.id) ASC")
-    List<Session> findSessionWithLeastTicketsByServiceModel(@Param("serviceModelId") Long serviceModelId);
-
-    @Query("SELECT s FROM Session s WHERE s.branch.id = :branchId AND s.service.id = :serviceId")
-    List<Session> findAllByBranchIdAndServiceId(@Param("branchId") Long branchId, @Param("serviceId") Long serviceId);
-
+    @Query("SELECT s FROM Session s " +
+            "WHERE s.branch.id = :branchId AND " +
+            "s.id = (SELECT t.session.id FROM Ticket t " +
+            "WHERE t.branch.id = :branchId AND t.serviceModel.id = :serviceModelId " +
+            "GROUP BY t.session.id " +
+            "ORDER BY COUNT(t.id) ASC " +
+            "LIMIT 1)")
+    Session findSessionWithLeastTicketsByBranchAndServiceModel(@Param("branchId") Long branchId,
+                                                               @Param("serviceModelId") Long serviceModelId);
 }

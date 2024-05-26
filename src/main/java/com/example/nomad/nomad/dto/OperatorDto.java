@@ -12,6 +12,8 @@ public class OperatorDto {
     private Long id;
     private String name;
     private String lastname;
+    private String login;
+    private String password;
     private Long roleId;
     private String roleName;
     private boolean active;

@@ -4,13 +4,15 @@ import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.TicketDto;
 import com.example.nomad.nomad.dto.WindowDto;
+import com.example.nomad.nomad.model.Session;
 import com.example.nomad.nomad.model.Ticket;
 
 import java.util.List;
 
 public interface TicketService {
     List<TicketDto> getTickets();
-    List<ServiceModelDto> getAvailableServices();
+    List<ServiceModelDto> getAvailableServices(Long branchId);
+    List<TicketDto> getTicketsBySessionIdAndStatus(Long sessionId,TicketStatus status);
     List<TicketDto> getTicketsBySessionId(Long id);
     List<TicketDto> getTicketsByServiceModelId(Long id);
     List<TicketDto> getTicketsByBranchId(Long id);
@@ -20,8 +22,12 @@ public interface TicketService {
     TicketStatus getTicketStatus(Long id);
     Long getTicketBookingCode(Long id);
 
+    public Session getSessionWithLeastTicketsAndService(Long branchId, Long serviceId);
+
 
     TicketDto createTicket(TicketDto newTicket);
+    TicketDto callNext(Long sessionId);
+    TicketDto complete(Long id);
     TicketDto setStatus(Long id,TicketStatus status);
     TicketDto updateTicket(Long id, TicketDto newTicketBody);
     void deleteTicket(Long id);

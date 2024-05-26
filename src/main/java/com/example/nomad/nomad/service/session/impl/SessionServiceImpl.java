@@ -1,6 +1,7 @@
 package com.example.nomad.nomad.service.session.impl;
 
 import com.example.nomad.nomad.Enum.SessionStatus;
+import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.*;
 import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
@@ -12,6 +13,7 @@ import com.example.nomad.nomad.service.operator.OperatorService;
 import com.example.nomad.nomad.service.roleService.RoleServiceService;
 import com.example.nomad.nomad.service.serviceModel.ServService;
 import com.example.nomad.nomad.service.session.SessionService;
+import com.example.nomad.nomad.service.ticket.TicketService;
 import com.example.nomad.nomad.service.window.WindowService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -77,9 +79,12 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public Session getSessionWithLeastTicketsAndService(Long serviceId) {
-        return sessionRepository.findSessionWithLeastTicketsByServiceModel(serviceId).get(0);
+    public List<Session> getActiveSessionsByBranchId(Long branchId, boolean active) {
+        return sessionRepository.findAllByBranchIdAndActive(branchId,active);
     }
+
+
+
 
     @Override
     public boolean isSessionActive(Long id) {
@@ -93,8 +98,8 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public SessionDto startASession(SessionDto newSession) {
-
         Session session = SessionMapper.toEntity(newSession);
+
         Branch branch = branchService.getEntityById(newSession.getBranchId());
         Operator operator = operatorService.getEntityById(newSession.getOperatorId());
         List<Session> activeOperatorSessions = sessionRepository.findByOperatorIdAndActive(operator.getId(),true);

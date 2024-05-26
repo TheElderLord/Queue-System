@@ -1,6 +1,7 @@
 package com.example.nomad.nomad.controller;
 
 
+import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.TicketDto;
 import com.example.nomad.nomad.mapper.TicketMapper;
@@ -23,13 +24,27 @@ public class TicketController {
     private ResponseEntity<List<TicketDto>> getTickets(){
         return ResponseEntity.ok(ticketService.getTickets());
     }
-    @GetMapping("/available-services")
-    private ResponseEntity<List<ServiceModelDto>> getAvailable(){
-        List<ServiceModelDto> services = ticketService.getAvailableServices();
+    @GetMapping("/sessions/{session_id}")
+    private ResponseEntity<List<TicketDto>> getBySessionAndStatus(@PathVariable Long session_id,
+                                                                  @RequestParam TicketStatus status){
+        return ResponseEntity.ok(ticketService.getTicketsBySessionIdAndStatus(session_id,status));
+    }
+    @GetMapping("/available-services/{branch_id}")
+    private ResponseEntity<List<ServiceModelDto>> getAvailable(@PathVariable Long branch_id){
+        List<ServiceModelDto> services = ticketService.getAvailableServices(branch_id);
         return ResponseEntity.ok(services);
     }
-    @PostMapping
-    private ResponseEntity<TicketDto> createTicket(@RequestBody TicketDto ticketDto){
+    @PostMapping("/register")
+    private ResponseEntity<TicketDto> RegisterTicket(@RequestBody TicketDto ticketDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.createTicket(ticketDto));
+    }
+    @PostMapping("/start/{session_id}")
+    private ResponseEntity<TicketDto> startServ(@PathVariable Long session_id){
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.callNext(session_id));
+    }
+    @PutMapping("/end/{id}")
+    private ResponseEntity<TicketDto> stopServ(@PathVariable Long
+                                                id){
+        return ResponseEntity.ok(ticketService.complete(id));
     }
 }
