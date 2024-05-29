@@ -58,16 +58,26 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     @Override
+    public boolean isOperatorInDatabase(String username) {
+        return operatorRepository.existsByLogin(username);
+    }
+
+    @Override
+    public OperatorDto getOperatorByOperator(String username) {
+        return OperatorMapper.toDto(operatorRepository.findByLogin(username));
+    }
+
+    @Override
     public OperatorDto getOperatorById(Long id) {
         return OperatorMapper.toDto(getEntityById(id));
     }
 
-    @Override
-    public Operator getByLoginAndPassword(String login, String password) {
-        Operator operator = operatorRepository.findByLoginAndPassword(login,password);
-        if(operator==null) throw new ResourceNotFoundException("Operator by login and password does not exist");
-        return operator;
-    }
+//    @Override
+//    public Operator getByLoginAndPassword(String login, String password) {
+//        Operator operator = operatorRepository.findByLoginAndPassword(login,password);
+//        if(operator==null) throw new ResourceNotFoundException("Operator by login and password does not exist");
+//        return operator;
+//    }
 
     @Override
     public List<OperatorDto> getOperatorsByRoleId(Long id) {

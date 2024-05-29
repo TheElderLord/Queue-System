@@ -67,8 +67,8 @@ public class OperatorController {
     }
     @PostMapping("/login")
     public ResponseEntity<Void> operatorLogin(@RequestBody OperatorDto operator) {
-        Operator createdOperator = operatorService.getByLoginAndPassword(operator.getLogin(),operator.getPassword());
-        if(createdOperator==null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        Operator createdOperator = operatorService.getByLoginAndPassword(operator.getLogin(),operator.getPassword());
+//        if(createdOperator==null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -12,13 +12,16 @@ public interface OperatorService {
     List<OperatorDto> getOperatorsByRoleId(Long id);
     List<Operator> getActiveOperatorsFromBranchId(Long branchId);
     OperatorDto getOperatorById(Long id);
-    Operator getByLoginAndPassword(String login, String password);
+//    Operator getByLoginAndPassword(String login, String password);
     OperatorDto createOperator(OperatorDto newOperator);
     OperatorDto updateOperator(Long id,OperatorDto newOperatorBody);
     boolean deleteOperator(Long id);
     boolean isOperatorOnline(Long id);
     void setActive(Long id);
     void setInactive(Long id);
+
+    boolean isOperatorInDatabase(String username);
+    OperatorDto getOperatorByOperator(String username);
 
     Operator getEntityById(Long id);
 
