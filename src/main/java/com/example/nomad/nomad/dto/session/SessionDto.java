@@ -1,4 +1,4 @@
-package com.example.nomad.nomad.dto;
+package com.example.nomad.nomad.dto.session;
 
 import com.example.nomad.nomad.Enum.SessionStatus;
 import lombok.Data;

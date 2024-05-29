@@ -1,11 +1,9 @@
 package com.example.nomad.nomad.service.session;
 
 import com.example.nomad.nomad.Enum.SessionStatus;
-import com.example.nomad.nomad.dto.ServiceModelDto;
-import com.example.nomad.nomad.dto.SessionDto;
+import com.example.nomad.nomad.dto.session.SessionDto;
 import com.example.nomad.nomad.model.Session;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface SessionService {

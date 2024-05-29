@@ -1,6 +1,6 @@
 package com.example.nomad.nomad.mapper;
 
-import com.example.nomad.nomad.dto.SessionDto;
+import com.example.nomad.nomad.dto.session.SessionDto;
 import com.example.nomad.nomad.model.Session;
 
 public class SessionMapper {

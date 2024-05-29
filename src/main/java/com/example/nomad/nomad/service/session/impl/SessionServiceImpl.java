@@ -1,8 +1,7 @@
 package com.example.nomad.nomad.service.session.impl;
 
 import com.example.nomad.nomad.Enum.SessionStatus;
-import com.example.nomad.nomad.Enum.TicketStatus;
-import com.example.nomad.nomad.dto.*;
+import com.example.nomad.nomad.dto.session.SessionDto;
 import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.SessionMapper;
@@ -10,18 +9,13 @@ import com.example.nomad.nomad.model.*;
 import com.example.nomad.nomad.repository.SessionRepository;
 import com.example.nomad.nomad.service.branch.BranchService;
 import com.example.nomad.nomad.service.operator.OperatorService;
-import com.example.nomad.nomad.service.roleService.RoleServiceService;
-import com.example.nomad.nomad.service.serviceModel.ServService;
 import com.example.nomad.nomad.service.session.SessionService;
-import com.example.nomad.nomad.service.ticket.TicketService;
 import com.example.nomad.nomad.service.window.WindowService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

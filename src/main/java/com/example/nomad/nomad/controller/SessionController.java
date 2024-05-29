@@ -1,10 +1,8 @@
 package com.example.nomad.nomad.controller;
 
 import com.example.nomad.nomad.Enum.SessionStatus;
-import com.example.nomad.nomad.dto.ServiceModelDto;
-import com.example.nomad.nomad.dto.SessionDto;
+import com.example.nomad.nomad.dto.session.SessionDto;
 import com.example.nomad.nomad.service.session.SessionService;
-import com.example.nomad.nomad.service.session.impl.SessionServiceImpl;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
 import lombok.AllArgsConstructor;
 import org.slf4j.LoggerFactory;

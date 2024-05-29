@@ -1,6 +1,6 @@
 package com.example.nomad.nomad.mapper;
 
-import com.example.nomad.nomad.dto.TicketDto;
+import com.example.nomad.nomad.dto.ticket.TicketDto;
 import com.example.nomad.nomad.model.Ticket;
 
 public class TicketMapper {

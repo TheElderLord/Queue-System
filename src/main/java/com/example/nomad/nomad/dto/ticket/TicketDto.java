@@ -1,4 +1,4 @@
-package com.example.nomad.nomad.dto;
+package com.example.nomad.nomad.dto.ticket;
 
 import com.example.nomad.nomad.Enum.TicketStatus;
 import lombok.AllArgsConstructor;

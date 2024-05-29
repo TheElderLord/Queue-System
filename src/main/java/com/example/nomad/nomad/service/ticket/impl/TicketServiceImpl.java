@@ -2,6 +2,10 @@ package com.example.nomad.nomad.service.ticket.impl;
 
 import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.*;
+import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
+import com.example.nomad.nomad.dto.session.SessionDto;
+import com.example.nomad.nomad.dto.ticket.TicketDto;
+import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.SessionMapper;
 import com.example.nomad.nomad.mapper.TicketMapper;
@@ -12,14 +16,12 @@ import com.example.nomad.nomad.service.branch.BranchService;
 import com.example.nomad.nomad.service.operator.OperatorService;
 import com.example.nomad.nomad.service.roleService.RoleServiceService;
 import com.example.nomad.nomad.service.serviceModel.ServService;
-import com.example.nomad.nomad.service.serviceModel.impl.ServiceServiceImpl;
 import com.example.nomad.nomad.service.session.SessionService;
 import com.example.nomad.nomad.service.ticket.TicketService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -81,8 +83,15 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketDto> getTicketsBySessionIdAndStatus(Long sessionId, TicketStatus status) {
-        return ticketRepository.findAllBySessionIdAndStatus(sessionId,status).stream()
+    public List<TicketDto> getAgentTickets(String agent) {
+        return ticketRepository.findAllByAgent(agent).stream()
+                .map(TicketMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TicketDto> getTicketsBySessionBranchIdAndStatus(SessionByBranchAndStatusDto session) {
+        return ticketRepository.findAllBySessionIdAndBranchIdAndStatus(session.getSessionId(), session.getStatus(), session.getBranchId()).stream()
                 .map(TicketMapper::toDto).collect(Collectors.toList());
     }
 
@@ -137,8 +146,9 @@ public class TicketServiceImpl implements TicketService {
         int current;
         int index = -1; // Initialize with -1 to handle cases where there are no sessions.
 
+        SessionByBranchAndStatusDto session = new SessionByBranchAndStatusDto(branchId,serviceId,TicketStatus.NEW);
         for (int i = 0; i < sessionByBranch.size(); i++) {
-            current = getTicketsBySessionIdAndStatus(sessionByBranch.get(i).getId(), TicketStatus.NEW).size();
+            current = getTicketsBySessionBranchIdAndStatus(session).size();
 
             if (current < min) {
                 min = current;
@@ -157,9 +167,15 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketDto createTicket(TicketDto newTicket) {
+    public TicketDto createTicket(TicketRegisterDto newTicket) {
         logger.info("Creating tickets:"+newTicket);
-        Ticket ticket = TicketMapper.toEntity(newTicket);
+
+        TicketDto ticketDto = new TicketDto();
+        ticketDto.setServiceId(newTicket.getServiceId());
+        ticketDto.setBranchId(newTicket.getBranchId());
+        ticketDto.setAgent(newTicket.getAgent());
+
+        Ticket ticket = TicketMapper.toEntity(ticketDto);
         Branch branch = branchService.getEntityById(newTicket.getBranchId());
 //        Session session = sessionService.getEntityById(newTicket.getSessionId());
         ServiceModel serviceModel = servService.getEntityById(newTicket.getServiceId());
@@ -176,8 +192,8 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketDto callNext(Long sessionId) {
-        List<Ticket> tickets = ticketRepository.findAllBySessionIdAndStatus(sessionId,TicketStatus.NEW);
+    public TicketDto callNext(SessionByBranchAndStatusDto session) {
+        List<Ticket> tickets = ticketRepository.findAllBySessionIdAndBranchIdAndStatus(session.getSessionId(),session.getStatus(),session.getBranchId());
         Ticket ticket = tickets.get(0);
         ticket.setStatus(TicketStatus.INSERVICE);
         ticket.setServiceStartTime(LocalDateTime.now());
