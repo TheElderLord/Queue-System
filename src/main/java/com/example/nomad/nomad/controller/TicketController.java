@@ -5,6 +5,7 @@ import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
+import com.example.nomad.nomad.dto.ticket.TicketQueueDto;
 import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
 import com.example.nomad.nomad.service.ticket.TicketService;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
@@ -24,16 +25,22 @@ public class TicketController {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     @GetMapping
-    private ResponseEntity<List<TicketDto>> getTickets(){
+    private ResponseEntity<List<TicketDto>> getTickets(@RequestParam(required = false) String agent,
+                                                       @RequestParam(required = false) String status){
+
         return ResponseEntity.ok(ticketService.getTickets());
     }
-    @GetMapping("/sessions")
+    @PostMapping("/sessions")
     private ResponseEntity<List<TicketDto>> getBySessionAndStatus(@RequestBody SessionByBranchAndStatusDto session){
         return ResponseEntity.ok(ticketService.getTicketsBySessionBranchIdAndStatus(session));
     }
     @GetMapping("/agent/{agent}")
     private ResponseEntity<List<TicketDto>> getByAgentTickets(@PathVariable String agent){
         return ResponseEntity.ok(ticketService.getAgentTickets(agent));
+    }
+    @PostMapping("/queue")
+    private ResponseEntity<List<TicketDto>> getByStatusTickets(@RequestBody TicketRegisterDto ticket){
+        return ResponseEntity.ok(ticketService.getQueueTickets(ticket.getServiceId(),ticket.getBranchId()));
     }
     @GetMapping("/available-services/{branch_id}")
     private ResponseEntity<List<ServiceModelDto>> getAvailable(@PathVariable Long branch_id){

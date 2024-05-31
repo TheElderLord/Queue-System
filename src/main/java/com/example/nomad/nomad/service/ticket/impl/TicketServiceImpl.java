@@ -5,6 +5,7 @@ import com.example.nomad.nomad.dto.*;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
 import com.example.nomad.nomad.dto.session.SessionDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
+import com.example.nomad.nomad.dto.ticket.TicketQueueDto;
 import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.SessionMapper;
@@ -91,7 +92,14 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<TicketDto> getTicketsBySessionBranchIdAndStatus(SessionByBranchAndStatusDto session) {
-        return ticketRepository.findAllBySessionIdAndBranchIdAndStatus(session.getSessionId(), session.getStatus(), session.getBranchId()).stream()
+        return ticketRepository.findAllBySessionIdAndBranchIdAndStatus(session.getSessionId(), session.getBranchId(), session.getStatus()).stream()
+                .map(TicketMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TicketDto> getQueueTickets(Long sessionId,Long branchId) {
+        List<Ticket> tickets =  ticketRepository.findAllBySessionIdAndBranchIdAndStatus(sessionId, branchId, TicketStatus.INSERVICE);
+        return tickets.stream()
                 .map(TicketMapper::toDto).collect(Collectors.toList());
     }
 
@@ -193,7 +201,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDto callNext(SessionByBranchAndStatusDto session) {
-        List<Ticket> tickets = ticketRepository.findAllBySessionIdAndBranchIdAndStatus(session.getSessionId(),session.getStatus(),session.getBranchId());
+        List<Ticket> tickets = ticketRepository.findAllBySessionIdAndBranchIdAndStatus(session.getSessionId(),session.getBranchId(),TicketStatus.NEW);
         Ticket ticket = tickets.get(0);
         ticket.setStatus(TicketStatus.INSERVICE);
         ticket.setServiceStartTime(LocalDateTime.now());
