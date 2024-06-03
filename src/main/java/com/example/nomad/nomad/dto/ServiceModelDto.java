@@ -10,8 +10,8 @@ public class ServiceModelDto {
     private Long id;
     private String name;
     private String description;
-//    private Long maxServTime;
-//    private Long maxWaitTime;
+    private Long maxServTime;
+    private Long maxWaitTime;
     private String parentName;
     private Long priority;
     private Long parentId;

@@ -17,7 +17,7 @@ public class TicketMapper {
         }
         if (ticket.getSession() != null) {
             dto.setSessionId(ticket.getSession().getId());
-            dto.setWindowNum(ticket.getSession().getWindow().getNumber());
+//            dto.setWindowNum(ticket.getSession().getWindow().getNumber());
         }
         if (ticket.getWindow() != null) {
             dto.setWindowNum(ticket.getWindow().getNumber());

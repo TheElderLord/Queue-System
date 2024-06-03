@@ -118,9 +118,9 @@ public class SessionServiceImpl implements SessionService {
     public SessionDto stopASession(Long id) {
         Session session = getEntityById(id);
 
-        if(!session.isActive()){
-            throw new ForbiddenActionException("The session is already finished");
-        }
+//        if(!session.isActive()){
+//            throw new ForbiddenActionException("The session is already finished");
+//        }
         windowService.setInactive(session.getWindow().getId());
         operatorService.setInactive(session.getOperator().getId());
         session.setStatus(SessionStatus.COMPLETED);
