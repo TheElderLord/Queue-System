@@ -28,12 +28,18 @@ public class Ticket {
     private ServiceModel serviceModel;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "window_id",nullable = false)
+    @JoinColumn(name = "session_id",nullable = false)
     private Session session;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "window_number")
+    private Window window;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id",nullable = false)
     private Branch branch;
+
+
 
 
     @Column(name = "registration_time")

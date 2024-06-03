@@ -1,6 +1,8 @@
 package com.example.nomad.nomad.service.operator.impl;
 
 import com.example.nomad.nomad.dto.OperatorDto;
+import com.example.nomad.nomad.dto.operatorAuth.OperatorAuthDto;
+import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.OperatorMapper;
 import com.example.nomad.nomad.model.Operator;
@@ -13,6 +15,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,8 +66,20 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     @Override
-    public OperatorDto getOperatorByOperator(String username) {
-        return OperatorMapper.toDto(operatorRepository.findByLogin(username));
+    public boolean isOperatorExist(String username) {
+        return operatorRepository.existsByLogin(username);
+    }
+
+    @Override
+    public OperatorDto operatorLogin(OperatorAuthDto operatorAuthDto) {
+        if(isOperatorExist(operatorAuthDto.getUsername())){
+            Operator operator = operatorRepository.findByLogin(operatorAuthDto.getUsername());
+            if(!Objects.equals(operator.getPassword(), operatorAuthDto.getPassword())){
+                throw new ForbiddenActionException("Password is invalid");
+            }
+            return OperatorMapper.toDto(operator);
+        }
+        throw new ResourceNotFoundException("Username does not exists");
     }
 
     @Override

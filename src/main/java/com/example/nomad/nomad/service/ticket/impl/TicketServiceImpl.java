@@ -188,7 +188,9 @@ public class TicketServiceImpl implements TicketService {
 //        Session session = sessionService.getEntityById(newTicket.getSessionId());
         ServiceModel serviceModel = servService.getEntityById(newTicket.getServiceId());
         Session session = getSessionWithLeastTicketsAndService(branch.getId(), serviceModel.getId());
+        Window window = session.getWindow();
         logger.info(session+" Session");
+        ticket.setWindow(window);
         ticket.setTicketNumber(new Random().nextInt(9999));
         ticket.setStatus(TicketStatus.NEW);
         ticket.setRegistrationTime(LocalDateTime.now());

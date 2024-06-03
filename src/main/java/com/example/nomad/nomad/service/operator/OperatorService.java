@@ -1,6 +1,7 @@
 package com.example.nomad.nomad.service.operator;
 
 import com.example.nomad.nomad.dto.OperatorDto;
+import com.example.nomad.nomad.dto.operatorAuth.OperatorAuthDto;
 import com.example.nomad.nomad.model.Operator;
 
 import java.util.List;
@@ -21,8 +22,9 @@ public interface OperatorService {
     void setInactive(Long id);
 
     boolean isOperatorInDatabase(String username);
-    OperatorDto getOperatorByOperator(String username);
+    boolean isOperatorExist(String username);
 
+    OperatorDto operatorLogin(OperatorAuthDto operatorAuthDto);
     Operator getEntityById(Long id);
 
 }

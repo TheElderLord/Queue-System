@@ -1,6 +1,7 @@
 package com.example.nomad.nomad.controller;
 
 import com.example.nomad.nomad.dto.OperatorDto;
+import com.example.nomad.nomad.dto.operatorAuth.OperatorAuthDto;
 import com.example.nomad.nomad.model.Operator;
 import com.example.nomad.nomad.service.operator.OperatorService;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
@@ -66,9 +67,8 @@ public class OperatorController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<Void> operatorLogin(@RequestBody OperatorDto operator) {
-//        Operator createdOperator = operatorService.getByLoginAndPassword(operator.getLogin(),operator.getPassword());
-//        if(createdOperator==null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<OperatorDto> operatorLogin(@RequestBody OperatorAuthDto operator) {
+        var isOk =  operatorService.operatorLogin(operator);
+        return ResponseEntity.ok(isOk);
     }
 }
