@@ -12,6 +12,7 @@ import com.example.nomad.nomad.service.operator.OperatorService;
 import com.example.nomad.nomad.service.role.RoleService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -87,6 +88,11 @@ public class OperatorServiceImpl implements OperatorService {
         return OperatorMapper.toDto(getEntityById(id));
     }
 
+    @Override
+    public Operator getOperatorByUsername(String username) {
+        return operatorRepository.findByLogin(username);
+    }
+
 //    @Override
 //    public Operator getByLoginAndPassword(String login, String password) {
 //        Operator operator = operatorRepository.findByLoginAndPassword(login,password);
@@ -144,5 +150,7 @@ public class OperatorServiceImpl implements OperatorService {
                 ()->new ResourceNotFoundException("The operator does not exist")
         );
     }
+
+
 
 }

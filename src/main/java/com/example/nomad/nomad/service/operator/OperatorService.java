@@ -3,6 +3,7 @@ package com.example.nomad.nomad.service.operator;
 import com.example.nomad.nomad.dto.OperatorDto;
 import com.example.nomad.nomad.dto.operatorAuth.OperatorAuthDto;
 import com.example.nomad.nomad.model.Operator;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ public interface OperatorService {
     List<OperatorDto> getOperatorsByRoleId(Long id);
     List<Operator> getActiveOperatorsFromBranchId(Long branchId);
     OperatorDto getOperatorById(Long id);
+    Operator getOperatorByUsername(String username);
 //    Operator getByLoginAndPassword(String login, String password);
     OperatorDto createOperator(OperatorDto newOperator);
     OperatorDto updateOperator(Long id,OperatorDto newOperatorBody);
@@ -26,5 +28,6 @@ public interface OperatorService {
 
     OperatorDto operatorLogin(OperatorAuthDto operatorAuthDto);
     Operator getEntityById(Long id);
+
 
 }

@@ -2,7 +2,9 @@ package com.example.nomad.nomad.controller;
 
 import com.example.nomad.nomad.dto.OperatorDto;
 import com.example.nomad.nomad.dto.operatorAuth.OperatorAuthDto;
+import com.example.nomad.nomad.dto.operatorAuth.OperatorAuthResponse;
 import com.example.nomad.nomad.model.Operator;
+import com.example.nomad.nomad.service.operator.OperatorAuthenticationService;
 import com.example.nomad.nomad.service.operator.OperatorService;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.List;
 public class OperatorController {
 
     private final OperatorService operatorService;
+    private final OperatorAuthenticationService operatorAuthenticationService;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     @GetMapping
@@ -67,8 +70,9 @@ public class OperatorController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<OperatorDto> operatorLogin(@RequestBody OperatorAuthDto operator) {
-        var isOk =  operatorService.operatorLogin(operator);
+    public ResponseEntity<OperatorAuthResponse> operatorLogin(@RequestBody OperatorAuthDto operator) {
+        logger.debug("Operator Controller",operator);
+        var isOk =  operatorAuthenticationService.login(operator);
         return ResponseEntity.ok(isOk);
     }
 }
