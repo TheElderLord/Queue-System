@@ -7,6 +7,7 @@ import com.example.nomad.nomad.dto.session.SessionDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
 import com.example.nomad.nomad.dto.ticket.TicketQueueDto;
 import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
+import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.SessionMapper;
 import com.example.nomad.nomad.mapper.TicketMapper;
@@ -176,8 +177,11 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDto createTicket(TicketRegisterDto newTicket) {
-        logger.info("Creating tickets:"+newTicket);
-
+//        logger.info("Creating tickets:"+newTicket);
+        List<Ticket> agentNotFinishedTickets = ticketRepository.findAllByAgentAndStatus(newTicket.getAgent(), TicketStatus.NEW);
+        if(!agentNotFinishedTickets.isEmpty()){
+            throw new ForbiddenActionException("User has incomplete tickets");
+        }
         TicketDto ticketDto = new TicketDto();
         ticketDto.setServiceId(newTicket.getServiceId());
         ticketDto.setBranchId(newTicket.getBranchId());
