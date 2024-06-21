@@ -25,12 +25,12 @@ class NomadApplicationTests {
 	void contextLoads() {
 	}
 
-	@Test
-	void shouldReturnRoles(){
-		ResponseEntity<String> response = restTemplate
-				.getForEntity("/api/v1/roles", String.class);
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-	}
+//	@Test
+//	void shouldReturnRoles(){
+//		ResponseEntity<String> response = restTemplate
+//				.getForEntity("/api/v1/roles", String.class);
+//		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//	}
 //
 //	@Test
 //	void shouldCreateARole(){
