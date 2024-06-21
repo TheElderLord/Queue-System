@@ -17,7 +17,7 @@ public interface TicketService {
     List<ServiceModelDto> getAvailableServices(Long branchId);
     List<TicketDto> getAgentTickets(String agent);
     List<TicketDto> getTicketsBySessionBranchIdAndStatus(SessionByBranchAndStatusDto session);
-    List<TicketDto> getQueueTickets(Long sessionId,Long branchId);
+    List<TicketDto> getQueueTickets(Long branchId);
     List<TicketDto> getTicketsBySessionId(Long id);
     List<TicketDto> getTicketsByServiceModelId(Long id);
     List<TicketDto> getTicketsByBranchId(Long id);

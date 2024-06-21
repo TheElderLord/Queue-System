@@ -97,8 +97,8 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketDto> getQueueTickets(Long sessionId,Long branchId) {
-        List<Ticket> tickets =  ticketRepository.findAllBySessionIdAndBranchIdAndStatus(sessionId, branchId, TicketStatus.INSERVICE);
+    public List<TicketDto> getQueueTickets(Long branchId) {
+        List<Ticket> tickets =  ticketRepository.findAllByBranchIdAndStatus(branchId, TicketStatus.INSERVICE);
         return tickets.stream()
                 .map(TicketMapper::toDto).collect(Collectors.toList());
     }

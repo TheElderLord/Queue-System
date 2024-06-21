@@ -70,9 +70,9 @@ public class OperatorController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<OperatorAuthResponse> operatorLogin(@RequestBody OperatorAuthDto operator) {
-        logger.debug("Operator Controller",operator);
-        var isOk =  operatorAuthenticationService.login(operator);
+    public ResponseEntity<OperatorDto> operatorLogin(@RequestBody OperatorAuthDto operator) {
+//        logger.debug("Operator Controller",operator);
+        var isOk =  operatorService.operatorLogin(operator);
         return ResponseEntity.ok(isOk);
     }
 }

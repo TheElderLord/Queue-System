@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 public class TicketController {
     private final TicketService ticketService;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
+    private final SimpMessagingTemplate messagingTemplate;
 
     @GetMapping
     private ResponseEntity<List<TicketDto>> getTickets(@RequestParam(required = false) String agent,
@@ -39,8 +41,8 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.getAgentTickets(agent));
     }
     @PostMapping("/queue")
-    private ResponseEntity<List<TicketDto>> getByStatusTickets(@RequestBody TicketRegisterDto ticket){
-        return ResponseEntity.ok(ticketService.getQueueTickets(ticket.getServiceId(),ticket.getBranchId()));
+    private ResponseEntity<List<TicketDto>> getByStatusTickets(@RequestParam(required = true) Long branchId){
+        return ResponseEntity.ok(ticketService.getQueueTickets(branchId));
     }
     @GetMapping("/available-services/{branch_id}")
     private ResponseEntity<List<ServiceModelDto>> getAvailable(@PathVariable Long branch_id){
@@ -54,7 +56,9 @@ public class TicketController {
     }
     @PostMapping("/start")
     private ResponseEntity<TicketDto> startServ(@RequestBody SessionByBranchAndStatusDto session){
-        return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.callNext(session));
+        TicketDto ticket = ticketService.callNext(session);
+        messagingTemplate.convertAndSend("/topic/tickets", ticket);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
     }
     @PutMapping("/end/{id}")
     private ResponseEntity<TicketDto> stopServ(@PathVariable Long
