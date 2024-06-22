@@ -27,7 +27,7 @@ public interface SessionService {
     //Get
 
     SessionDto startASession(SessionDto newSession);
-    SessionDto stopASession(Long id);
+    SessionDto stopASession(Long id,SessionStatus sessionStatus);
     SessionDto updateSession(Long id, SessionDto newSessionBody);
 
     void deleteSession(Long id);

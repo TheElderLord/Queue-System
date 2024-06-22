@@ -115,7 +115,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public SessionDto stopASession(Long id) {
+    public SessionDto stopASession(Long id,SessionStatus sessionStatus) {
         Session session = getEntityById(id);
 
 //        if(!session.isActive()){
@@ -123,7 +123,7 @@ public class SessionServiceImpl implements SessionService {
 //        }
         windowService.setInactive(session.getWindow().getId());
         operatorService.setInactive(session.getOperator().getId());
-        session.setStatus(SessionStatus.COMPLETED);
+        session.setStatus(sessionStatus);
         session.setEndTime(LocalDateTime.now());
         session.setActive(false);
 

@@ -65,6 +65,11 @@ public class TicketController {
                                                 id){
         return ResponseEntity.ok(ticketService.complete(id));
     }
+    @PutMapping("/rating/{id}")
+    private ResponseEntity<Void> setRate(@PathVariable Long id,@RequestParam(required = true) int rating){
+        ticketService.setRating(id,rating);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
     @DeleteMapping("/{id}")
     private ResponseEntity<Void> deleteTicket(@PathVariable Long id){
         ticketService.deleteTicket(id);

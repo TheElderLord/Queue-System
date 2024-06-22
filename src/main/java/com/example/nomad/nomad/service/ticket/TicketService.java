@@ -36,6 +36,7 @@ public interface TicketService {
     TicketDto setStatus(Long id,TicketStatus status);
     TicketDto updateTicket(Long id, TicketDto newTicketBody);
     void deleteTicket(Long id);
+    void setRating(Long id, int rating);
 
     Ticket getEntityById(Long id);
 

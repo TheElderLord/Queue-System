@@ -1,5 +1,6 @@
 package com.example.nomad.nomad.service.ticket.impl;
 
+import com.example.nomad.nomad.Enum.TerminalType;
 import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.*;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
@@ -177,11 +178,16 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDto createTicket(TicketRegisterDto newTicket) {
-//        logger.info("Creating tickets:"+newTicket);
-        List<Ticket> agentNotFinishedTickets = ticketRepository.findAllByAgentAndStatus(newTicket.getAgent(), TicketStatus.NEW);
-        if(!agentNotFinishedTickets.isEmpty()){
-            throw new ForbiddenActionException("User has incomplete tickets");
+        logger.info("Creating tickets:"+newTicket);
+
+        List<Ticket> agentNotFinishedTickets;
+        if(newTicket.getTerminalType()== TerminalType.MOBILE){
+            agentNotFinishedTickets  = ticketRepository.findAllByAgentAndStatus(newTicket.getAgent(), TicketStatus.NEW);
+            if(!agentNotFinishedTickets.isEmpty()){
+                throw new ForbiddenActionException("User has incomplete tickets");
+            }
         }
+
         TicketDto ticketDto = new TicketDto();
         ticketDto.setServiceId(newTicket.getServiceId());
         ticketDto.setBranchId(newTicket.getBranchId());
@@ -239,6 +245,13 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public void deleteTicket(Long id) {
         ticketRepository.deleteById(id);
+    }
+
+    @Override
+    public void setRating(Long id,int rating) {
+        Ticket ticket = getEntityById(id);
+        ticket.setRating(rating);
+        ticketRepository.save(ticket);
     }
 
     @Override

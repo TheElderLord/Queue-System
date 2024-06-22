@@ -70,8 +70,8 @@ public class SessionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.startASession(sessionDto));
     }
     @PutMapping("/{id}")
-    private ResponseEntity<SessionDto> stopASession(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.stopASession(id));
+    private ResponseEntity<SessionDto> stopASession(@PathVariable Long id,@RequestParam SessionStatus status){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.stopASession(id,status));
     }
 
 
