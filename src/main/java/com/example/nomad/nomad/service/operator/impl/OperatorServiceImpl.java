@@ -10,7 +10,9 @@ import com.example.nomad.nomad.model.Role;
 import com.example.nomad.nomad.repository.OperatorRepository;
 import com.example.nomad.nomad.service.operator.OperatorService;
 import com.example.nomad.nomad.service.role.RoleService;
+import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
 import lombok.AllArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class OperatorServiceImpl implements OperatorService {
     private OperatorRepository operatorRepository;
     private RoleService roleServiceService;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
     @Override
     public List<OperatorDto> getOperators() {
         return operatorRepository.findAll().stream().map(
@@ -74,7 +77,9 @@ public class OperatorServiceImpl implements OperatorService {
     @Override
     public OperatorDto operatorLogin(OperatorAuthDto operatorAuthDto) {
 //        if(isOperatorExist(operatorAuthDto.getUsername())){
+
             Operator operator = operatorRepository.findByLogin(operatorAuthDto.getUsername());
+            logger.info("Operator service",operator);
             if(operator ==null){
                 throw new ResourceNotFoundException("Username does not exists");
             }
