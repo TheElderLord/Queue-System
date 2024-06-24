@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class SessionByBranchAndStatusDto {
     private Long branchId;
-    private Long sessionId;
+    private Long operatorId;
     private TicketStatus status;
 }

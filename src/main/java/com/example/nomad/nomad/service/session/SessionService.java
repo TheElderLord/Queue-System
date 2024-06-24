@@ -2,6 +2,7 @@ package com.example.nomad.nomad.service.session;
 
 import com.example.nomad.nomad.Enum.SessionStatus;
 import com.example.nomad.nomad.dto.session.SessionDto;
+import com.example.nomad.nomad.dto.session.StartSessionDto;
 import com.example.nomad.nomad.model.Session;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public interface SessionService {
 
     //Get
 
-    SessionDto startASession(SessionDto newSession);
+    SessionDto startASession(StartSessionDto newSession);
     SessionDto stopASession(Long id,SessionStatus sessionStatus);
     SessionDto updateSession(Long id, SessionDto newSessionBody);
 

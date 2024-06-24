@@ -13,6 +13,7 @@ public interface TicketRepository extends JpaRepository<Ticket,Long> {
     List<Ticket> findAllByStatus(TicketStatus status);
     List<Ticket> findAllByAgent(String agent);
     List<Ticket> findAllByAgentAndStatus(String agent,TicketStatus status);
-    List<Ticket> findAllBySessionIdAndBranchIdAndStatus(Long session_id,Long branch_id ,TicketStatus status );
+    List<Ticket> findAllByOperatorIdAndBranchIdAndStatus(Long session_id,Long branch_id ,TicketStatus status );
     List<Ticket> findAllByBranchIdAndStatus(Long branchId,TicketStatus status);
+    boolean existsByTicketNumber(int ticketNumber);
 }

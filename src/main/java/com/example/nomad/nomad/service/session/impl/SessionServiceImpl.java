@@ -2,6 +2,7 @@ package com.example.nomad.nomad.service.session.impl;
 
 import com.example.nomad.nomad.Enum.SessionStatus;
 import com.example.nomad.nomad.dto.session.SessionDto;
+import com.example.nomad.nomad.dto.session.StartSessionDto;
 import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.SessionMapper;
@@ -91,8 +92,8 @@ public class SessionServiceImpl implements SessionService {
 
 
     @Override
-    public SessionDto startASession(SessionDto newSession) {
-        Session session = SessionMapper.toEntity(newSession);
+    public SessionDto startASession(StartSessionDto newSession) {
+        Session session = new Session();
 
         Branch branch = branchService.getEntityById(newSession.getBranchId());
         Operator operator = operatorService.getEntityById(newSession.getOperatorId());

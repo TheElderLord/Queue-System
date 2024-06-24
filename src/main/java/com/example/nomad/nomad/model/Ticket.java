@@ -32,6 +32,10 @@ public class Ticket {
     private Session session;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "operator_id")
+    private Operator operator;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "window_number")
     private Window window;
 

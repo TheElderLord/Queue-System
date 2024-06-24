@@ -2,6 +2,7 @@ package com.example.nomad.nomad.controller;
 
 import com.example.nomad.nomad.Enum.SessionStatus;
 import com.example.nomad.nomad.dto.session.SessionDto;
+import com.example.nomad.nomad.dto.session.StartSessionDto;
 import com.example.nomad.nomad.service.session.SessionService;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
 import lombok.AllArgsConstructor;
@@ -66,7 +67,7 @@ public class SessionController {
 //    @GetMapping("?status={status}")
 //    private ResponseEntity<List<SessionDto>> getSessionsByStatus(@PatchMapping)
     @PostMapping()
-    private ResponseEntity<SessionDto> createASession(@RequestBody SessionDto sessionDto){
+    private ResponseEntity<SessionDto> createASession(@RequestBody StartSessionDto sessionDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.startASession(sessionDto));
     }
     @PutMapping("/{id}")

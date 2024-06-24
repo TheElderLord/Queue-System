@@ -1,11 +1,9 @@
 package com.example.nomad.nomad.controller;
 
 
-import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
-import com.example.nomad.nomad.dto.ticket.TicketQueueDto;
 import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
 import com.example.nomad.nomad.service.ticket.TicketService;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
@@ -33,14 +31,14 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.getTickets());
     }
     @PostMapping("/sessions")
-    private ResponseEntity<List<TicketDto>> getBySessionAndStatus(@RequestBody SessionByBranchAndStatusDto session){
-        return ResponseEntity.ok(ticketService.getTicketsBySessionBranchIdAndStatus(session));
+    private ResponseEntity<List<TicketDto>> getByOperatorAndStatus(@RequestBody SessionByBranchAndStatusDto session){
+        return ResponseEntity.ok(ticketService.getTicketsByOpratorBranchIdAndStatus(session));
     }
     @GetMapping("/agent/{agent}")
     private ResponseEntity<List<TicketDto>> getByAgentTickets(@PathVariable String agent){
         return ResponseEntity.ok(ticketService.getAgentTickets(agent));
     }
-    @PostMapping("/queue")
+    @GetMapping("/queue")
     private ResponseEntity<List<TicketDto>> getByStatusTickets(@RequestParam(required = true) Long branchId){
         return ResponseEntity.ok(ticketService.getQueueTickets(branchId));
     }
