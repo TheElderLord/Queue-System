@@ -1,6 +1,7 @@
 package com.example.nomad.nomad.controller;
 
 
+import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
@@ -43,7 +44,10 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.getQueueTickets(branchId));
     }
     @GetMapping("/available-services/{branch_id}")
-    private ResponseEntity<List<ServiceModelDto>> getAvailable(@PathVariable Long branch_id){
+    private ResponseEntity<List<ServiceModelDto>> getAvailable(@PathVariable Long branch_id,@RequestParam(required = false) Long serviceId){
+        if(serviceId!=null){
+            return ResponseEntity.ok(ticketService.getChildTickets(serviceId));
+        }
         List<ServiceModelDto> services = ticketService.getAvailableServices(branch_id);
         return ResponseEntity.ok(services);
     }
@@ -60,8 +64,8 @@ public class TicketController {
     }
     @PutMapping("/end/{id}")
     private ResponseEntity<TicketDto> stopServ(@PathVariable Long
-                                                id){
-        return ResponseEntity.ok(ticketService.complete(id));
+                                                id, @RequestParam TicketStatus status){
+        return ResponseEntity.ok(ticketService.complete(id,status));
     }
     @PutMapping("/rating/{id}")
     private ResponseEntity<Void> setRate(@PathVariable Long id,@RequestParam(required = true) int rating){

@@ -3,6 +3,7 @@ package com.example.nomad.nomad.service.ticket;
 import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
+import com.example.nomad.nomad.dto.ticket.TicketBookDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
 import com.example.nomad.nomad.dto.WindowDto;
 import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
@@ -14,6 +15,7 @@ import java.util.List;
 public interface TicketService {
     List<TicketDto> getTickets();
     List<ServiceModelDto> getAvailableServices(Long branchId);
+    List<ServiceModelDto> getChildTickets(Long serviceId);
     List<TicketDto> getAgentTickets(String agent);
     List<TicketDto> getTicketsByOpratorBranchIdAndStatus(SessionByBranchAndStatusDto session);
     List<TicketDto> getQueueTickets(Long branchId);
@@ -24,14 +26,16 @@ public interface TicketService {
     WindowDto getTicketWindow(Long id);
     TicketDto getTicketById(Long id);
     TicketStatus getTicketStatus(Long id);
-    Long getTicketBookingCode(Long id);
+    int getTicketBookingCode(Long id);
 
     public Session getSessionWithLeastTicketsAndService(Long branchId, Long serviceId);
 
 
     TicketDto createTicket(TicketRegisterDto newTicket);
+    TicketDto bookTicket(TicketBookDto bookDto);
+    TicketDto activateBookedTicket(int code);
     TicketDto callNext(SessionByBranchAndStatusDto session);
-    TicketDto complete(Long id);
+    TicketDto complete(Long id,TicketStatus status);
     TicketDto setStatus(Long id,TicketStatus status);
     TicketDto updateTicket(Long id, TicketDto newTicketBody);
     void deleteTicket(Long id);

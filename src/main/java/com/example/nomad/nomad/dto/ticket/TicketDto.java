@@ -25,7 +25,7 @@ public class TicketDto {
     private LocalDateTime serviceEndTime;
     private TicketStatus status;
     private LocalDateTime bookingTime;
-    private Long bookingCode;
+    private int bookingCode;
     private boolean directed;
     private Long redirectedWindowId;
     private Long redirectedWindowNumber;

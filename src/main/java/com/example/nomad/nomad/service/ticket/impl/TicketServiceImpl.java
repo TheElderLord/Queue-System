@@ -4,10 +4,12 @@ import com.example.nomad.nomad.Enum.TerminalType;
 import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.*;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
+import com.example.nomad.nomad.dto.ticket.TicketBookDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
 import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
 import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
+import com.example.nomad.nomad.mapper.ServiceModelMapper;
 import com.example.nomad.nomad.mapper.TicketMapper;
 import com.example.nomad.nomad.mapper.WindowMapper;
 import com.example.nomad.nomad.model.*;
@@ -74,12 +76,20 @@ public class TicketServiceImpl implements TicketService {
                 .toList();
 
         // Extract service models from available services
-        List<ServiceModelDto> serviceModels = availableServiceIds.stream()
-                .map(servService::getServiceById)
+        List<ServiceModel> serviceModels = availableServiceIds.stream()
+                .map(servService::getEntityById)
                 .distinct()  // Ensure distinct service models
+                .toList();
+        List<ServiceModel> parentServices = serviceModels.stream().map(ServiceModel::getParentService).distinct()  // Ensure distinct service models
                 .collect(Collectors.toList());
 
-        return serviceModels;
+        return parentServices.stream().map(ServiceModelMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ServiceModelDto> getChildTickets(Long serviceId) {
+        List<ServiceModelDto> childTickets = servService.getChildService(serviceId);
+        return childTickets;
     }
 
     @Override
@@ -141,7 +151,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Long getTicketBookingCode(Long id) {
+    public int getTicketBookingCode(Long id) {
         return getEntityById(id).getBookingCode();
     }
 
@@ -217,6 +227,36 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public TicketDto bookTicket(TicketBookDto bookDto) {
+        Ticket ticket = new Ticket();
+        ticket.setServiceModel(servService.getEntityById(bookDto.getServiceId()));
+        ticket.setBranch(branchService.getEntityById(bookDto.getBranchId()));
+        ticket.setAgent(bookDto.getAgent());
+        ticket.setBookingTime(bookDto.getBookingTime());
+        ticket.setStatus(TicketStatus.BOOKED);
+        int bookingCode;
+        do {
+            bookingCode = new Random().nextInt(100);
+        } while (ticketRepository.existsByBookingCode(bookingCode));
+
+        ticket.setBookingCode(bookingCode);
+        ticketRepository.save(ticket);
+        return TicketMapper.toDto(ticket);
+    }
+
+    @Override
+    public TicketDto activateBookedTicket(int code) {
+        Ticket ticket = ticketRepository.findByBookingCode(code);
+        if(ticket!=null){
+            return null;
+        }
+        ticket.setStatus(TicketStatus.NEW);
+        ticket.setRegistrationTime(LocalDateTime.now());
+        ticketRepository.save(ticket);
+        return TicketMapper.toDto(ticket);
+    }
+
+    @Override
     public TicketDto callNext(SessionByBranchAndStatusDto session) {
         List<Ticket> tickets = ticketRepository.findAllByOperatorIdAndBranchIdAndStatus(session.getOperatorId(),session.getBranchId(),TicketStatus.NEW);
         Ticket ticket = tickets.get(0);
@@ -227,9 +267,9 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketDto complete(Long id) {
+    public TicketDto complete(Long id,TicketStatus status) {
         Ticket ticket = getEntityById(id);
-        ticket.setStatus(TicketStatus.COMPLETED);
+        ticket.setStatus(status);
         ticket.setServiceEndTime(LocalDateTime.now());
         ticketRepository.save(ticket);
         return TicketMapper.toDto(ticket);

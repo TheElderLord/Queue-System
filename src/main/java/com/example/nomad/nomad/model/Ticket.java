@@ -64,7 +64,7 @@ public class Ticket {
     private LocalDateTime bookingTime;
 
     @Column(name = "booking_code")
-    private Long bookingCode;
+    private int bookingCode;
 
 
     @Column(name = "is_redirected",nullable = false, columnDefinition = "boolean default false")

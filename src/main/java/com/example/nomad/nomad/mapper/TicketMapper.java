@@ -31,8 +31,8 @@ public class TicketMapper {
         dto.setServiceStartTime(ticket.getServiceStartTime());
         dto.setServiceEndTime(ticket.getServiceEndTime());
         dto.setStatus(ticket.getStatus());
-        dto.setBookingTime(ticket.getBookingTime());
-        dto.setBookingCode(ticket.getBookingCode());
+//        dto.setBookingTime(ticket.getBookingTime());
+//        dto.setBookingCode(ticket.getBookingCode());
         dto.setDirected(ticket.isDirected());
         if (ticket.getRedirectedWindow() != null) {
             dto.setRedirectedWindowId(ticket.getRedirectedWindow().getId());
@@ -54,8 +54,8 @@ public class TicketMapper {
         ticket.setServiceStartTime(dto.getServiceStartTime());
         ticket.setServiceEndTime(dto.getServiceEndTime());
         ticket.setStatus(dto.getStatus());
-        ticket.setBookingTime(dto.getBookingTime());
-        ticket.setBookingCode(dto.getBookingCode());
+//        ticket.setBookingTime(dto.getBookingTime());
+//        ticket.setBookingCode(dto.getBookingCode());
         ticket.setDirected(dto.isDirected());
         ticket.setAgent(dto.getAgent());
         ticket.setRating(dto.getRating());

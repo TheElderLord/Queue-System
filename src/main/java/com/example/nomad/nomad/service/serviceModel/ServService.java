@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ServService {
     List<ServiceModelDto> getServices();
+    List<ServiceModelDto> getChildService(Long id);
 
     ServiceModelDto getServiceById(Long id);
 

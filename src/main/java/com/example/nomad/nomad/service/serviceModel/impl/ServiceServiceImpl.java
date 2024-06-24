@@ -31,6 +31,11 @@ public class ServiceServiceImpl implements ServService {
     }
 
     @Override
+    public List<ServiceModelDto> getChildService(Long id) {
+        return serviceRepository.findAllByParentServiceId(id).stream().map(ServiceModelMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
     public ServiceModelDto getServiceById(Long id) {
         return ServiceModelMapper.toDto(getEntityById(id));
     }
