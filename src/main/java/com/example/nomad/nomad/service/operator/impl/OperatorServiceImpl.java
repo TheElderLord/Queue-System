@@ -73,14 +73,17 @@ public class OperatorServiceImpl implements OperatorService {
 
     @Override
     public OperatorDto operatorLogin(OperatorAuthDto operatorAuthDto) {
-        if(isOperatorExist(operatorAuthDto.getUsername())){
+//        if(isOperatorExist(operatorAuthDto.getUsername())){
             Operator operator = operatorRepository.findByLogin(operatorAuthDto.getUsername());
+            if(operator ==null){
+                throw new ResourceNotFoundException("Username does not exists");
+            }
             if(!Objects.equals(operator.getPassword(), operatorAuthDto.getPassword())){
                 throw new ForbiddenActionException("Password is invalid");
             }
             return OperatorMapper.toDto(operator);
-        }
-        throw new ResourceNotFoundException("Username does not exists");
+//        }
+
     }
 
     @Override
