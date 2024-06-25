@@ -42,7 +42,7 @@ public class TicketServiceImpl implements TicketService {
     private final ServService servService;
     private final BranchService branchService;
     private final SessionService sessionService;
-    private static int counter = 0;
+    private  int counter = 0;
     private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     @Override
@@ -216,13 +216,12 @@ public class TicketServiceImpl implements TicketService {
         ticket.setBranch(branch);
         ticket.setSession(session);
         ticket.setServiceModel(serviceModel);
-//        int randomTicketNumber;
+        int randomTicketNumber;
         do {
-//            randomTicketNumber = new Random().nextInt(100);
-            counter = counter+1;
-        } while (ticketRepository.existsByTicketNumber(counter));
+            randomTicketNumber = new Random().nextInt(100);
+        } while (ticketRepository.existsByTicketNumber(randomTicketNumber));
 
-        ticket.setTicketNumber(counter++);
+        ticket.setTicketNumber(randomTicketNumber);
 
         ticketRepository.save(ticket);
         return TicketMapper.toDto(ticket);
