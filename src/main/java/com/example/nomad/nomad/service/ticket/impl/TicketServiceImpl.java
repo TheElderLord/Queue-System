@@ -42,7 +42,7 @@ public class TicketServiceImpl implements TicketService {
     private final ServService servService;
     private final BranchService branchService;
     private final SessionService sessionService;
-    private  int counter = 0;
+    private static int counter = 0;
     private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     @Override
