@@ -48,6 +48,11 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
+    public List<SessionDto> getSessionsByOperatorIdAndStatus(Long id) {
+        return sessionRepository.findByOperatorIdAndActive(id,true).stream().map(SessionMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
     public List<SessionDto> getSessionsByWindowId(Long id) {
         return sessionRepository.findAllByWindowId(id).stream().map(SessionMapper::toDto).collect(Collectors.toList());
     }

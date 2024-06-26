@@ -43,12 +43,15 @@ public class SessionController {
     ResponseEntity<SessionDto> getSessionById(@PathVariable Long id){
         return ResponseEntity.ok(service.getSessionById(id));
     }
-    @GetMapping("/branch/{id}")
+     @GetMapping("/branch/{id}")
     ResponseEntity<List<SessionDto>> getSessionByBranchId(@PathVariable Long id){
         return ResponseEntity.ok(service.getSessionsByBranchId(id));
     }
     @GetMapping("/operator/{id}")
-    ResponseEntity<List<SessionDto>> getSessionByOperatorId(@PathVariable Long id){
+    ResponseEntity<List<SessionDto>> getSessionByOperatorId(@PathVariable Long id,@RequestParam(required = false) Boolean active){
+        if(active){
+            return ResponseEntity.ok(service.getSessionsByOperatorIdAndStatus(id));
+        }
         return ResponseEntity.ok(service.getSessionsByOperatorId(id));
     }
     @GetMapping("/window/{id}")

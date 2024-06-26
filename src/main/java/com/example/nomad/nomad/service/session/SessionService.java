@@ -13,6 +13,7 @@ public interface SessionService {
     List<SessionDto> getSessions();
     List<SessionDto> getSessionsByBranchId(Long id);
     List<SessionDto> getSessionsByOperatorId(Long id);
+    List<SessionDto> getSessionsByOperatorIdAndStatus(Long id);
     List<SessionDto> getSessionsByWindowId(Long id);
     List<SessionDto> getActiveSessions();
     List<SessionDto> getInActiveSessions();
