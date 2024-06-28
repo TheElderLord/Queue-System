@@ -38,6 +38,7 @@ public class TicketMapper {
             dto.setRedirectedWindowId(ticket.getRedirectedWindow().getId());
             dto.setRedirectedWindowNumber(ticket.getRedirectedWindow().getNumber());
         }
+        dto.setLanguage(ticket.getLanguage());
         dto.setAgent(ticket.getAgent());
         dto.setRating(ticket.getRating());
         return dto;
@@ -59,6 +60,7 @@ public class TicketMapper {
         ticket.setDirected(dto.isDirected());
         ticket.setAgent(dto.getAgent());
         ticket.setRating(dto.getRating());
+        ticket.setLanguage(dto.getLanguage());
         // ServiceModel, Window, Branch, and RedirectedWindow need to be set separately, typically by service layer
         return ticket;
     }

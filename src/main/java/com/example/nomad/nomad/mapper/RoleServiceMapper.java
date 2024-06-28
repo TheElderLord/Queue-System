@@ -10,14 +10,14 @@ public class RoleServiceMapper {
         }
         RoleServiceDto dto = new RoleServiceDto();
         dto.setId(roleService.getId());
-        if (roleService.getBranch() != null) {
-            dto.setBranchId(roleService.getBranch().getId());
-            dto.setBranchName(roleService.getBranch().getName());
-
-        }
+//        if (roleService.getBranch() != null) {
+//            dto.setBranchId(roleService.getBranch().getId());
+//            dto.setBranchName(roleService.getBranch().getName());
+//
+//        }
         if (roleService.getRole() != null) {
             dto.setRoleId(roleService.getRole().getId());
-            dto.setRoleName(roleService.getRole().getName());
+//            dto.setRoleName(roleService.getRole().getName());
         }
         if (roleService.getServiceModel() != null) {
             dto.setServiceId(roleService.getServiceModel().getId());

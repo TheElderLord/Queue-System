@@ -1,13 +1,12 @@
 package com.example.nomad.nomad.model;
 
+import com.example.nomad.nomad.Enum.Language;
 import com.example.nomad.nomad.Enum.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -79,6 +78,8 @@ public class Ticket {
 
     @Column(name = "rating")
     private int rating;
+    @Column(name = "lang")
+    private Language language;
 
 
 

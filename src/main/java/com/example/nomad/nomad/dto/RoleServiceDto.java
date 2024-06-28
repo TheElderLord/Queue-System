@@ -8,10 +8,10 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class RoleServiceDto {
     private Long id;
-    private Long branchId;
-    private String branchName;
+//    private Long branchId;
+//    private String branchName;
     private Long roleId;
-    private String roleName;
+//    private String roleName;
     private Long serviceId;
     private String serviceName;
 }

@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 public class RoleDto {
@@ -11,4 +13,5 @@ public class RoleDto {
     private String name;
     private String description;
     private Long priority;
+    private List<RoleServiceDto> roleServices;
 }

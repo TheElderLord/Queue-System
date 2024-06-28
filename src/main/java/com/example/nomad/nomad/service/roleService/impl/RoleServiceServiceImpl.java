@@ -1,14 +1,8 @@
 package com.example.nomad.nomad.service.roleService.impl;
 
-import com.example.nomad.nomad.dto.BranchDto;
-import com.example.nomad.nomad.dto.RoleDto;
 import com.example.nomad.nomad.dto.RoleServiceDto;
-import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
-import com.example.nomad.nomad.mapper.BranchMapper;
-import com.example.nomad.nomad.mapper.RoleMapper;
 import com.example.nomad.nomad.mapper.RoleServiceMapper;
-import com.example.nomad.nomad.mapper.ServiceModelMapper;
 import com.example.nomad.nomad.model.Branch;
 import com.example.nomad.nomad.model.Role;
 import com.example.nomad.nomad.model.RoleServiceModel;
@@ -57,26 +51,28 @@ public class RoleServiceServiceImpl implements RoleServiceService {
                 .map(RoleServiceMapper::toDto).collect(Collectors.toList());
     }
 
-    @Override
-    public List<RoleServiceDto> getRoleServicesByBranch(Long id) {
-        return roleServiceRepository.findAllByBranchId(id).stream()
-                .map(RoleServiceMapper::toDto).collect(Collectors.toList());
-    }
+//    @Override
+//    public List<RoleServiceDto> getRoleServicesByBranch(Long id) {
+//        return roleServiceRepository.findAllByBranchId(id).stream()
+//                .map(RoleServiceMapper::toDto).collect(Collectors.toList());
+//    }
 
 
     @Override
-    public RoleServiceDto saveRoleService(RoleServiceDto newRoleServiceModel) {
-        RoleServiceModel roleServiceModel = RoleServiceMapper.toEntity(newRoleServiceModel);
+    public void saveRoleService(Long id, RoleServiceDto[] newRoleServiceModel) {
+        int length = newRoleServiceModel.length;
+        Role role = roleService.getEntityById(id);
+//        RoleServiceModel[] roleServiceModelArray = new RoleServiceModel[length];
+        for (int i = 0;i<length;i++) {
+            ServiceModel serviceModel = servService.getEntityById(newRoleServiceModel[i].getServiceId());
+            RoleServiceModel roleServiceModel = new RoleServiceModel();
+            roleServiceModel.setServiceModel(serviceModel);
+            roleServiceModel.setRole(role);
+            roleServiceRepository.save(roleServiceModel);
+        }
+//        Branch branch = branchService.getEntityById(newRoleServiceModel.getBranchId());
+//        roleServiceModel.setBranch(branch);
 
-        Branch branch = branchService.getEntityById(newRoleServiceModel.getBranchId());
-        ServiceModel serviceModel = servService.getEntityById(newRoleServiceModel.getServiceId());
-        Role role = roleService.getEntityById(newRoleServiceModel.getRoleId());
-
-        roleServiceModel.setServiceModel(serviceModel);
-        roleServiceModel.setBranch(branch);
-        roleServiceModel.setRole(role);
-
-        return RoleServiceMapper.toDto(roleServiceRepository.save(roleServiceModel));
     }
 
 
@@ -84,11 +80,11 @@ public class RoleServiceServiceImpl implements RoleServiceService {
     public RoleServiceDto updateRoleService(Long id, RoleServiceDto newroleServiceDto) {
         RoleServiceModel roleServiceModel = getEntityById(id);
 
-        Branch branch = branchService.getEntityById(newroleServiceDto.getBranchId());
+//        Branch branch = branchService.getEntityById(newroleServiceDto.getBranchId());
         ServiceModel serviceModel = servService.getEntityById(newroleServiceDto.getServiceId());
         Role role = roleService.getEntityById(newroleServiceDto.getRoleId());
 
-        roleServiceModel.setBranch(branch);
+//        roleServiceModel.setBranch(branch);
         roleServiceModel.setRole(role);
         roleServiceModel.setServiceModel(serviceModel);
         return RoleServiceMapper.toDto(roleServiceRepository.save(roleServiceModel));

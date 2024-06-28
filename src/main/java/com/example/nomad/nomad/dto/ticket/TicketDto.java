@@ -1,5 +1,6 @@
 package com.example.nomad.nomad.dto.ticket;
 
+import com.example.nomad.nomad.Enum.Language;
 import com.example.nomad.nomad.Enum.TicketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,4 +32,5 @@ public class TicketDto {
     private Long redirectedWindowNumber;
     private String agent;
     private int rating;
+    private Language language;
 }

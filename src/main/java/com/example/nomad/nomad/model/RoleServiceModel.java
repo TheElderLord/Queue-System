@@ -16,10 +16,10 @@ public class RoleServiceModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
-    @JoinColumn(name = "branch_id",nullable = false)
-    private Branch branch;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
+//    @JoinColumn(name = "branch_id",nullable = false)
+//    private Branch branch;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.MERGE)
