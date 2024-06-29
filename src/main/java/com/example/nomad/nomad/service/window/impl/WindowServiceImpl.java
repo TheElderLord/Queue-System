@@ -78,6 +78,11 @@ public class WindowServiceImpl implements WindowService {
                 .collect(Collectors.toList());
     }
 
+//    @Override
+//    public List<WindowDto> getActiveWindowsByOperatorId(Long id) {
+//        return ;
+//    }
+
     @Override
     public WindowDto createWindow(WindowDto newWindow) {
         Window window = WindowMapper.toEntity(newWindow);

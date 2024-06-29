@@ -20,6 +20,8 @@ public class TicketDto {
     private Long sessionId;
     private Long windowNum;
     private Long branchId;
+    private Long operatorId;
+    private String operatorName;
     private String branchName;
     private LocalDateTime registrationTime;
     private LocalDateTime serviceStartTime;

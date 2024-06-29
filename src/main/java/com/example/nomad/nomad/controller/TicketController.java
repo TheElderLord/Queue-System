@@ -5,6 +5,7 @@ import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
+import com.example.nomad.nomad.dto.ticket.TicketRedirectDto;
 import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
 import com.example.nomad.nomad.service.ticket.TicketService;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
@@ -64,6 +65,11 @@ public class TicketController {
     private ResponseEntity<TicketDto> startServ(@RequestBody SessionByBranchAndStatusDto session){
         TicketDto ticket = ticketService.callNext(session);
         messagingTemplate.convertAndSend("/topic/tickets", ticket);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
+    }
+    @PostMapping("/redirect/{id}")
+    private ResponseEntity<TicketDto> redirectTicket(@PathVariable Long id, @RequestBody TicketRedirectDto ticketDto){
+        TicketDto ticket = ticketService.redirect(id,ticketDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
     }
     @PutMapping("/end/{id}")

@@ -6,6 +6,7 @@ import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
 import com.example.nomad.nomad.dto.ticket.TicketBookDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
 import com.example.nomad.nomad.dto.WindowDto;
+import com.example.nomad.nomad.dto.ticket.TicketRedirectDto;
 import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
 import com.example.nomad.nomad.model.Session;
 import com.example.nomad.nomad.model.Ticket;
@@ -40,6 +41,7 @@ public interface TicketService {
     TicketDto updateTicket(Long id, TicketDto newTicketBody);
     void deleteTicket(Long id);
     void setRating(Long id, int rating);
+    TicketDto redirect(Long id, TicketRedirectDto ticketDto);
 
     Ticket getEntityById(Long id);
 

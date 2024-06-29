@@ -26,6 +26,10 @@ public class TicketMapper {
             dto.setBranchId(ticket.getBranch().getId());
             dto.setBranchName(ticket.getBranch().getName());
         }
+        if(ticket.getOperator()!=null){
+            dto.setOperatorId(ticket.getOperator().getId());
+            dto.setOperatorName(ticket.getOperator().getName());
+        }
 
         dto.setRegistrationTime(ticket.getRegistrationTime());
         dto.setServiceStartTime(ticket.getServiceStartTime());
@@ -61,6 +65,7 @@ public class TicketMapper {
         ticket.setAgent(dto.getAgent());
         ticket.setRating(dto.getRating());
         ticket.setLanguage(dto.getLanguage());
+        ;
         // ServiceModel, Window, Branch, and RedirectedWindow need to be set separately, typically by service layer
         return ticket;
     }

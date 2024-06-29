@@ -12,6 +12,7 @@ public interface WindowService {
     List<WindowDto> getActiveWindows();
     List<WindowDto> getInactiveWindows();
     List<WindowDto> getWindowsByBranchId(Long id);
+//    List<WindowDto> getActiveWindowsByOperatorId(Long id);
     WindowDto createWindow(WindowDto newWindow);
     WindowDto updateWindow(Long id, WindowDto windowDto);
     WindowDto getWindowById(Long id);

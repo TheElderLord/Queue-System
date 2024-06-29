@@ -1,15 +1,19 @@
 package com.example.nomad.nomad.service.ticket.impl;
 
+import com.example.nomad.nomad.Enum.SessionStatus;
 import com.example.nomad.nomad.Enum.TerminalType;
 import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.*;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
+import com.example.nomad.nomad.dto.session.SessionDto;
 import com.example.nomad.nomad.dto.ticket.TicketBookDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
+import com.example.nomad.nomad.dto.ticket.TicketRedirectDto;
 import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
 import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.ServiceModelMapper;
+import com.example.nomad.nomad.mapper.SessionMapper;
 import com.example.nomad.nomad.mapper.TicketMapper;
 import com.example.nomad.nomad.mapper.WindowMapper;
 import com.example.nomad.nomad.model.*;
@@ -20,6 +24,7 @@ import com.example.nomad.nomad.service.roleService.RoleServiceService;
 import com.example.nomad.nomad.service.serviceModel.ServService;
 import com.example.nomad.nomad.service.session.SessionService;
 import com.example.nomad.nomad.service.ticket.TicketService;
+import com.example.nomad.nomad.service.window.WindowService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -37,11 +42,12 @@ import org.slf4j.LoggerFactory;
 @AllArgsConstructor
 public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
-//    private final OperatorService operatorService;
+    private final OperatorService operatorService;
     private final RoleServiceService roleServiceService;
     private final ServService servService;
     private final BranchService branchService;
     private final SessionService sessionService;
+    private final WindowService windowService;
     private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     @Override
@@ -298,6 +304,22 @@ public class TicketServiceImpl implements TicketService {
         Ticket ticket = getEntityById(id);
         ticket.setRating(rating);
         ticketRepository.save(ticket);
+    }
+
+    @Override
+    public TicketDto redirect(Long id, TicketRedirectDto ticketDto) {
+        Ticket ticket = getEntityById(id);
+        Operator operator = operatorService.getEntityById(ticketDto.getOperatorId());
+        ticket.setOperator(operator);
+        ticket.setStatus(TicketStatus.NEW);
+        List<SessionDto> session = sessionService.getSessionsByOperatorIdAndStatus(operator.getId());
+        ticket.setSession(SessionMapper.toEntity(session.get(0)));
+        Window window = windowService.getEntityById(session.get(0).getWindowId());
+        ticket.setWindow(window);
+        ticket.setRegistrationTime(LocalDateTime.now());
+        ticket.setDirected(true);
+        ticketRepository.save(ticket);
+        return TicketMapper.toDto(ticket);
     }
 
     @Override
