@@ -160,7 +160,6 @@ public class SessionServiceImpl implements SessionService {
 
 
 
-
     @Override
     public Session getEntityById(Long id) {
         return sessionRepository.findById(id).orElseThrow(
