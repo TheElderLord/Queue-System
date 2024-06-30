@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface TicketService {
     List<TicketDto> getTickets();
-    List<ServiceModelDto> getAvailableServices(Long branchId);
+    List<ServiceModelDto> getAvailableServices(Long branchId,Long serviceId);
     List<ServiceModelDto> getChildTickets(Long serviceId);
     List<TicketDto> getAgentTickets(String agent);
     List<TicketDto> getTicketsByOpratorBranchIdAndStatus(SessionByBranchAndStatusDto session);

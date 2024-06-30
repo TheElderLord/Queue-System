@@ -50,10 +50,10 @@ public class TicketController {
     }
     @GetMapping("/available-services/{branch_id}")
     private ResponseEntity<List<ServiceModelDto>> getAvailable(@PathVariable Long branch_id,@RequestParam(required = false) Long serviceId){
-        if(serviceId!=null){
-            return ResponseEntity.ok(ticketService.getChildTickets(serviceId));
-        }
-        List<ServiceModelDto> services = ticketService.getAvailableServices(branch_id);
+//        if(serviceId!=null){
+//            return ResponseEntity.ok(ticketService.getChildTickets(serviceId));
+//        }
+        List<ServiceModelDto> services = ticketService.getAvailableServices(branch_id,serviceId);
         return ResponseEntity.ok(services);
     }
     @PostMapping("/register")

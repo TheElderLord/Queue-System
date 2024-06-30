@@ -56,7 +56,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<ServiceModelDto> getAvailableServices(Long branchId) {
+    public List<ServiceModelDto> getAvailableServices(Long branchId,Long serviceId) {
         // Get a list of active operators
         List<Session> activeSessionsByBranch = sessionService.getActiveSessionsByBranchId(branchId,true);
 
@@ -66,7 +66,7 @@ public class TicketServiceImpl implements TicketService {
         if (activeSessionsByBranch.isEmpty()) {
             return Collections.emptyList();
         }
-        List<Operator> activeOperators = activeSessionsByBranch.stream().map(e->e.getOperator()).collect(Collectors.toList());
+        List<Operator> activeOperators = activeSessionsByBranch.stream().map(Session::getOperator).toList();
 
         // Extract the IDs of roles of active operators
         List<Long> roleIds = activeOperators.stream()
@@ -86,8 +86,12 @@ public class TicketServiceImpl implements TicketService {
                 .map(servService::getEntityById)
                 .distinct()  // Ensure distinct service models
                 .toList();
+        if(serviceId!=null){
+            return  serviceModels.stream().map(ServiceModelMapper::toDto).distinct()  // Ensure distinct service models
+                    .toList();
+        }
         List<ServiceModel> parentServices = serviceModels.stream().map(ServiceModel::getParentService).distinct()  // Ensure distinct service models
-                .collect(Collectors.toList());
+                .toList();
 
         return parentServices.stream().map(ServiceModelMapper::toDto).collect(Collectors.toList());
     }
