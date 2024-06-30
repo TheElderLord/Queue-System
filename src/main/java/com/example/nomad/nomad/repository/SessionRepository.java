@@ -21,6 +21,8 @@ public interface SessionRepository extends JpaRepository<Session,Long> {
     List<Session> findAllByStatus(SessionStatus status);
     List<Session> findAllByBranchIdAndActive(Long branchId,boolean active);
 
+    void deleteById(Long id);
+
     @Query("SELECT s FROM Session s " +
             "WHERE s.branch.id = :branchId AND " +
             "s.id = (SELECT t.session.id FROM Ticket t " +

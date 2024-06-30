@@ -23,11 +23,11 @@ public class Ticket {
     private int ticketNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_id",nullable = false)
+    @JoinColumn(name = "service_id",nullable = true)
     private ServiceModel serviceModel;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "session_id",nullable = false)
+    @JoinColumn(name = "session_id",nullable = true)
     private Session session;
 
     @ManyToOne(fetch = FetchType.LAZY)

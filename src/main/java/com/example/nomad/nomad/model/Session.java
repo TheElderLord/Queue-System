@@ -29,7 +29,7 @@ public class Session {
     @Column(name = "active",nullable = false, columnDefinition = "boolean default false")
     private boolean active;
     @ManyToOne
-    @JoinColumn(name = "operator_id",nullable = false)
+    @JoinColumn(name = "operator_id")
     private Operator operator;
     @ManyToOne
     @JoinColumn(name = "window_id",nullable = false)

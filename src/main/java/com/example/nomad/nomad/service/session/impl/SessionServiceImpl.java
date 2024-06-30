@@ -8,6 +8,7 @@ import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.SessionMapper;
 import com.example.nomad.nomad.model.*;
 import com.example.nomad.nomad.repository.SessionRepository;
+import com.example.nomad.nomad.repository.TicketRepository;
 import com.example.nomad.nomad.service.branch.BranchService;
 import com.example.nomad.nomad.service.operator.OperatorService;
 import com.example.nomad.nomad.service.session.SessionService;
@@ -30,6 +31,7 @@ public class SessionServiceImpl implements SessionService {
 
     private final BranchService branchService;
     private final WindowService windowService;
+    private final TicketRepository ticketRepository;
 
     //GET METHODS
     @Override
@@ -154,6 +156,13 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void deleteSession(Long id) {
+        Session session = getEntityById(id);
+        List<Ticket> tickets = ticketRepository.findAllBySessionId(session.getId());
+//        ticketRepository.deleteAllBySessionId(id);
+        for (Ticket ticket:tickets) {
+
+            ticketRepository.deleteById(ticket.getId());
+        }
         sessionRepository.deleteById(id);
     }
 

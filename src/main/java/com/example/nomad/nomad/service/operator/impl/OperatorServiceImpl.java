@@ -8,8 +8,10 @@ import com.example.nomad.nomad.mapper.OperatorMapper;
 import com.example.nomad.nomad.model.Operator;
 import com.example.nomad.nomad.model.Role;
 import com.example.nomad.nomad.model.Session;
+import com.example.nomad.nomad.model.Ticket;
 import com.example.nomad.nomad.repository.OperatorRepository;
 import com.example.nomad.nomad.repository.SessionRepository;
+import com.example.nomad.nomad.repository.TicketRepository;
 import com.example.nomad.nomad.service.operator.OperatorService;
 import com.example.nomad.nomad.service.role.RoleService;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
@@ -29,6 +31,7 @@ public class OperatorServiceImpl implements OperatorService {
     private OperatorRepository operatorRepository;
     private RoleService roleServiceService;
     private SessionRepository sessionRepository;
+    private TicketRepository ticketRepository;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
     @Override
     public List<OperatorDto> getOperators() {
@@ -152,10 +155,19 @@ public class OperatorServiceImpl implements OperatorService {
             return  false;
         }
         List<Session> sessions =  sessionRepository.findAllByOperatorId(operator.getId());
-        for (Session session:sessions) {
-            session.setOperator(null);
-            sessionRepository.save(session);
+        List<Ticket> tickets = ticketRepository.findAllByOperatorId(operator.getId());
+
+        for (Ticket ticket:tickets) {
+            ticketRepository.deleteById(ticket.getId());
+//            ticket.setOperator(null);
+//            ticketRepository.save(ticket);
         }
+        for (Session session:sessions) {
+//                session.setOperator(null);
+//                sessionRepository.save(session);
+            sessionRepository.deleteById(session.getId());
+        }
+
         operatorRepository.deleteById(id);
         return true;
     }
