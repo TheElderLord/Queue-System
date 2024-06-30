@@ -62,6 +62,12 @@ public class RoleServiceServiceImpl implements RoleServiceService {
     public void saveRoleService(Long id, RoleServiceDto[] newRoleServiceModel) {
         int length = newRoleServiceModel.length;
         Role role = roleService.getEntityById(id);
+        List<RoleServiceModel> roleServiceModels = roleServiceRepository.findAllByRoleId(id);
+        if(!roleServiceModels.isEmpty()){
+            for (RoleServiceModel rs:roleServiceModels) {
+                roleServiceRepository.deleteById(rs.getId());
+            }
+        }
 //        RoleServiceModel[] roleServiceModelArray = new RoleServiceModel[length];
         for (int i = 0;i<length;i++) {
             ServiceModel serviceModel = servService.getEntityById(newRoleServiceModel[i].getServiceId());
@@ -77,16 +83,15 @@ public class RoleServiceServiceImpl implements RoleServiceService {
 
 
     @Override
-    public RoleServiceDto updateRoleService(Long id, RoleServiceDto newroleServiceDto) {
+    public RoleServiceDto updateRoleService(Long id, RoleServiceDto[] newroleServiceDto) {
         RoleServiceModel roleServiceModel = getEntityById(id);
-
-//        Branch branch = branchService.getEntityById(newroleServiceDto.getBranchId());
-        ServiceModel serviceModel = servService.getEntityById(newroleServiceDto.getServiceId());
-        Role role = roleService.getEntityById(newroleServiceDto.getRoleId());
-
-//        roleServiceModel.setBranch(branch);
-        roleServiceModel.setRole(role);
-        roleServiceModel.setServiceModel(serviceModel);
+        List<RoleServiceModel> roleServiceModels = roleServiceRepository.findAllByRoleId(id);
+//        roleServiceModels
+//
+//
+////        roleServiceModel.setBranch(branch);
+//        roleServiceModel.setRole(role);
+//        roleServiceModel.setServiceModel(serviceModel);
         return RoleServiceMapper.toDto(roleServiceRepository.save(roleServiceModel));
 
 

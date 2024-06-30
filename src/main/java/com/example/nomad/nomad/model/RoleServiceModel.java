@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -30,4 +32,7 @@ public class RoleServiceModel {
     @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     @JoinColumn(name = "service_id",nullable = false)
     private ServiceModel serviceModel;
+
+//    @OneToMany(mappedBy = "services")
+//    private List<ServiceModel> serviceModels;
 }

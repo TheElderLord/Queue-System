@@ -58,11 +58,11 @@ public class RoleServiceController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @PutMapping("/{id}")
-    private ResponseEntity<Void> updateRoleService(@PathVariable Long id,@RequestBody RoleServiceDto updatedRoleService){
-        if (id == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        System.out.println(updatedRoleService);
+    private ResponseEntity<Void> updateRoleService(@PathVariable Long id,@RequestBody RoleServiceDto[] updatedRoleService){
+//        if (id == null) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//        System.out.println(updatedRoleService);
         roleServiceService.updateRoleService(id,updatedRoleService);
         return ResponseEntity.noContent().build();
     }

@@ -17,7 +17,7 @@ public interface RoleServiceService {
 //    List<RoleServiceDto> getRoleServicesByBranch(Long id);
 
     void saveRoleService(Long id, RoleServiceDto[] roleServiceDto);
-    RoleServiceDto updateRoleService(Long id, RoleServiceDto roleServiceDto);
+    RoleServiceDto updateRoleService(Long id, RoleServiceDto[] roleServiceDto);
     boolean deleteRoleService(Long id);
 
     RoleServiceModel getEntityById(Long id);
