@@ -5,8 +5,10 @@ import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.ServiceModelMapper;
 import com.example.nomad.nomad.model.RoleServiceModel;
 import com.example.nomad.nomad.model.ServiceModel;
+import com.example.nomad.nomad.model.Ticket;
 import com.example.nomad.nomad.repository.RoleServiceRepository;
 import com.example.nomad.nomad.repository.ServiceRepository;
+import com.example.nomad.nomad.repository.TicketRepository;
 import com.example.nomad.nomad.service.role.RoleService;
 import com.example.nomad.nomad.service.roleService.RoleServiceService;
 import com.example.nomad.nomad.service.serviceModel.ServService;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 public class ServiceServiceImpl implements ServService {
     private final ServiceRepository serviceRepository;
     private final RoleServiceRepository roleServiceRepository;
+    private final TicketRepository ticketRepository;
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
@@ -77,6 +80,10 @@ public class ServiceServiceImpl implements ServService {
     @Override
     public void deleteService(Long id) {
         List<RoleServiceModel> roleServices = roleServiceRepository.findAllByServiceModelId(id);
+        List<Ticket> tickets = ticketRepository.findAllByServiceModelId(id);
+        for (Ticket ticket:tickets) {
+            ticketRepository.deleteById(ticket.getId());
+        }
         for (RoleServiceModel rs:roleServices) {
             roleServiceRepository.deleteById(rs.getId());
         }
