@@ -72,7 +72,14 @@ public class WindowServiceImpl implements WindowService {
     }
 
     @Override
-    public List<WindowDto> getWindowsByBranchId(Long id) {
+    public List<WindowDto> getWindowsByBranchId(Long id,Boolean active) {
+        if(active!=null){
+            if(!active){
+                return windowRepository.findAllByBranchIdAndActive(id,active).stream()
+                        .map(WindowMapper::toDto)
+                        .collect(Collectors.toList());
+            }
+        }
         return windowRepository.findAllByBranchId(id).stream()
                 .map(WindowMapper::toDto)
                 .collect(Collectors.toList());

@@ -171,19 +171,22 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Session getSessionWithLeastTicketsAndService(Long branchId, Long serviceId) {
         List<Session> sessionByBranch = sessionService.getActiveSessionsByBranchId(branchId,true);
+        logger.info("ACTIVE SESSIONS BY BRANCH:"+sessionByBranch.stream().toList());
         int min = Integer.MAX_VALUE;
         int current;
         int index = -1; // Initialize with -1 to handle cases where there are no sessions.
 
-        SessionByBranchAndStatusDto session = new SessionByBranchAndStatusDto(branchId,serviceId,TicketStatus.NEW);
+//        SessionByBranchAndStatusDto session = new SessionByBranchAndStatusDto(branchId,serviceId,TicketStatus.NEW);
         for (int i = 0; i < sessionByBranch.size(); i++) {
-            current = getTicketsByOpratorBranchIdAndStatus(session).size();
+            current = ticketRepository.findAllBySessionId(sessionByBranch.get(i).getId()).size();
+            logger.info("TICKETS BY SESSION:"+current);
 
             if (current < min) {
                 min = current;
                 index = i;
             }
         }
+        logger.info("LEAST TICKET SESSION:"+sessionByBranch.get(index));
 
         if (index != -1) {
             // Return the session with the least tickets

@@ -9,4 +9,5 @@ public interface WindowRepository extends JpaRepository<Window,Long> {
 
     List<Window> findAllByBranchId(Long id);
     List<Window> findAllByActive(boolean active);
+    List<Window> findAllByBranchIdAndActive(Long id,Boolean active);
 }

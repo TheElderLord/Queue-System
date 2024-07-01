@@ -41,8 +41,8 @@ public class WindowController {
     }
 
     @GetMapping("/branch/{branchId}")
-    public ResponseEntity<List<WindowDto>> getWindowsByBranchId(@PathVariable Long branchId) {
-        List<WindowDto> windows = windowService.getWindowsByBranchId(branchId);
+    public ResponseEntity<List<WindowDto>> getWindowsByBranchId(@PathVariable Long branchId,@RequestParam(required = false) Boolean active) {
+        List<WindowDto> windows = windowService.getWindowsByBranchId(branchId,active);
         if (windows.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
