@@ -2,12 +2,15 @@ package com.example.nomad.nomad.service.role.impl;
 
 
 import com.example.nomad.nomad.dto.RoleDto;
+import com.example.nomad.nomad.dto.RoleServiceDto;
 import com.example.nomad.nomad.mapper.RoleMapper;
 import com.example.nomad.nomad.mapper.RoleServiceMapper;
 import com.example.nomad.nomad.model.Role;
+import com.example.nomad.nomad.model.ServiceModel;
 import com.example.nomad.nomad.repository.RoleRepository;
 import com.example.nomad.nomad.repository.RoleServiceRepository;
 import com.example.nomad.nomad.service.roleService.RoleServiceService;
+import com.example.nomad.nomad.service.serviceModel.ServService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -22,12 +25,13 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements com.example.nomad.nomad.service.role.RoleService {
     private final RoleRepository roleRepository;
     private final RoleServiceRepository roleServiceRepository;
+    private ServService servService;
 
     @Override
     public List<RoleDto> getAllRoles() {
         List<RoleDto> roles = roleRepository.findAll().stream()
                 .map(RoleMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
 
         List<RoleDto> roleDtos = roles.stream()
                 .map(e -> {
@@ -38,6 +42,13 @@ public class RoleServiceImpl implements com.example.nomad.nomad.service.role.Rol
                     return e;
                 })
                 .collect(Collectors.toList());
+
+        for (RoleDto role:roleDtos) {
+            for (RoleServiceDto roleServiceDto:role.getRoleServices()) {
+                ServiceModel serviceModel = servService.getEntityById(roleServiceDto.getServiceId());
+                roleServiceDto.setParentServiceName(serviceModel.getParentService().getName());
+            }
+        }
 
         return roleDtos;
     }

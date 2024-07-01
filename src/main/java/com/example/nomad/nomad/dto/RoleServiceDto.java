@@ -14,4 +14,5 @@ public class RoleServiceDto {
 //    private String roleName;
     private Long serviceId;
     private String serviceName;
+    private String parentServiceName;
 }
