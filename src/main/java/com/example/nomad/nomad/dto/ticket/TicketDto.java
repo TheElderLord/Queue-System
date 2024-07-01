@@ -9,6 +9,7 @@ import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor
@@ -23,11 +24,11 @@ public class TicketDto {
     private Long operatorId;
     private String operatorName;
     private String branchName;
-    private LocalDateTime registrationTime;
-    private LocalDateTime serviceStartTime;
-    private LocalDateTime serviceEndTime;
+    private ZonedDateTime registrationTime;
+    private ZonedDateTime serviceStartTime;
+    private ZonedDateTime serviceEndTime;
     private TicketStatus status;
-    private LocalDateTime bookingTime;
+    private ZonedDateTime bookingTime;
     private int bookingCode;
     private boolean directed;
     private Long redirectedWindowId;

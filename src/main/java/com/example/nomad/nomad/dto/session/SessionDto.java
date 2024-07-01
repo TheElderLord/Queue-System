@@ -7,14 +7,15 @@ import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor
 public class SessionDto {
     private Long id;
     private SessionStatus status;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private ZonedDateTime startTime;
+    private ZonedDateTime endTime;
     private boolean active;
     private Long operatorId;
     private String operatorName;

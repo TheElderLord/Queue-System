@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +14,6 @@ public class TicketBookDto {
     private Long branchId;
     private String agent;
 //    private TerminalType terminalType;
-    private LocalDateTime bookingTime;
+    private ZonedDateTime bookingTime;
 }
 

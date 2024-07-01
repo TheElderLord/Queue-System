@@ -18,6 +18,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,7 +116,10 @@ public class SessionServiceImpl implements SessionService {
         operatorService.setActive(newSession.getOperatorId());
         session.setActive(true);
         session.setStatus(SessionStatus.ONNLINE);
-        session.setStartTime(LocalDateTime.now());
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZoneId almatyZone = ZoneId.of("Asia/Almaty");
+        ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
+        session.setStartTime(almatyZonedDateTime);
         session.setBranch(branch);
         session.setOperator(operator);
         session.setWindow(window);
@@ -132,7 +137,10 @@ public class SessionServiceImpl implements SessionService {
         windowService.setInactive(session.getWindow().getId());
         operatorService.setInactive(session.getOperator().getId());
         session.setStatus(sessionStatus);
-        session.setEndTime(LocalDateTime.now());
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZoneId almatyZone = ZoneId.of("Asia/Almaty");
+        ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
+        session.setEndTime(almatyZonedDateTime);
         session.setActive(false);
 
         sessionRepository.save(session);
