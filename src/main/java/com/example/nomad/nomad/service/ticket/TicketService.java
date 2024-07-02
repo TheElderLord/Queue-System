@@ -3,11 +3,8 @@ package com.example.nomad.nomad.service.ticket;
 import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
-import com.example.nomad.nomad.dto.ticket.TicketBookDto;
-import com.example.nomad.nomad.dto.ticket.TicketDto;
+import com.example.nomad.nomad.dto.ticket.*;
 import com.example.nomad.nomad.dto.WindowDto;
-import com.example.nomad.nomad.dto.ticket.TicketRedirectDto;
-import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
 import com.example.nomad.nomad.model.Session;
 import com.example.nomad.nomad.model.Ticket;
 
@@ -40,7 +37,7 @@ public interface TicketService {
     TicketDto setStatus(Long id,TicketStatus status);
     TicketDto updateTicket(Long id, TicketDto newTicketBody);
     void deleteTicket(Long id);
-    void setRating(Long id, int rating);
+    void setRating(TicketRatingDto ticketRatingDto);
     TicketDto redirect(Long id, TicketRedirectDto ticketDto);
 
     Ticket getEntityById(Long id);

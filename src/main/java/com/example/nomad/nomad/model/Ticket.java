@@ -79,6 +79,8 @@ public class Ticket {
 
     @Column(name = "rating")
     private int rating;
+    @Column(name = "comment")
+    private String comment;
     @Column(name = "lang")
     private Language language;
 

@@ -5,6 +5,7 @@ import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
+import com.example.nomad.nomad.dto.ticket.TicketRatingDto;
 import com.example.nomad.nomad.dto.ticket.TicketRedirectDto;
 import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
 import com.example.nomad.nomad.service.ticket.TicketService;
@@ -77,9 +78,9 @@ public class TicketController {
                                                 id, @RequestParam TicketStatus status){
         return ResponseEntity.ok(ticketService.complete(id,status));
     }
-    @PutMapping("/rating/{id}")
-    private ResponseEntity<Void> setRate(@PathVariable Long id,@RequestParam(required = true) int rating){
-        ticketService.setRating(id,rating);
+    @PutMapping("/rating")
+    private ResponseEntity<Void> setRate(@RequestBody TicketRatingDto ticketRatingDto){
+        ticketService.setRating(ticketRatingDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @DeleteMapping("/{id}")

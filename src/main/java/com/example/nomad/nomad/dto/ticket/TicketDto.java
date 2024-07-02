@@ -35,5 +35,6 @@ public class TicketDto {
     private Long redirectedWindowNumber;
     private String agent;
     private int rating;
+    private String comment;
     private Language language;
 }

@@ -6,10 +6,7 @@ import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.*;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
 import com.example.nomad.nomad.dto.session.SessionDto;
-import com.example.nomad.nomad.dto.ticket.TicketBookDto;
-import com.example.nomad.nomad.dto.ticket.TicketDto;
-import com.example.nomad.nomad.dto.ticket.TicketRedirectDto;
-import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
+import com.example.nomad.nomad.dto.ticket.*;
 import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.ServiceModelMapper;
@@ -322,9 +319,10 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void setRating(Long id,int rating) {
-        Ticket ticket = getEntityById(id);
-        ticket.setRating(rating);
+    public void setRating(TicketRatingDto ticketRatingDto) {
+        Ticket ticket = getEntityById(ticketRatingDto.getId());
+        ticket.setRating(ticketRatingDto.getRating());
+        ticket.setComment(ticketRatingDto.getComment());
         ticketRepository.save(ticket);
     }
 
