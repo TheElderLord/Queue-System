@@ -20,9 +20,14 @@ public class Branch {
     private String name;
     @Column(name = "description")
     private String description;
+    @Column(name = "lat")
+    private Double latitude;
+    @Column(name = "long")
+    private Double longitude;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Branch parent;
+
 
 
     public Branch(Long branchId) {

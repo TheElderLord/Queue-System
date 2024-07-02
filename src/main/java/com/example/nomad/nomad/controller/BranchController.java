@@ -1,8 +1,8 @@
 package com.example.nomad.nomad.controller;
 
-import com.example.nomad.nomad.dto.BranchDto;
+import com.example.nomad.nomad.dto.branch.BranchDto;
+import com.example.nomad.nomad.dto.branch.BranchLocationDto;
 import com.example.nomad.nomad.service.branch.BranchService;
-import com.example.nomad.nomad.service.branch.impl.BranchServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +26,10 @@ public class BranchController {
     public ResponseEntity<BranchDto> getBranchById(@PathVariable Long id) {
         BranchDto branch = branchService.getBranchById(id);
         return new ResponseEntity<>(branch, HttpStatus.OK);
+    }
+    @GetMapping("/location/{id}")
+    public ResponseEntity<BranchLocationDto> getBranchLocationById(@PathVariable Long id) {
+        return new ResponseEntity<>(branchService.getLocationOfBranch(id), HttpStatus.OK);
     }
 
     @PostMapping

@@ -230,6 +230,7 @@ public class TicketServiceImpl implements TicketService {
         ticket.setBranch(branch);
         ticket.setSession(session);
         ticket.setServiceModel(serviceModel);
+        ticket.setLanguage(newTicket.getLanguage());
         int randomTicketNumber;
         do {
             randomTicketNumber = new Random().nextInt(100);

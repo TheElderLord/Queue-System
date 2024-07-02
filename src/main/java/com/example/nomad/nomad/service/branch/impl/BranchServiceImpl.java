@@ -1,6 +1,7 @@
 package com.example.nomad.nomad.service.branch.impl;
 
-import com.example.nomad.nomad.dto.BranchDto;
+import com.example.nomad.nomad.dto.branch.BranchDto;
+import com.example.nomad.nomad.dto.branch.BranchLocationDto;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.BranchMapper;
 import com.example.nomad.nomad.model.Branch;
@@ -25,6 +26,13 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
+    public BranchLocationDto getLocationOfBranch(Long id) {
+        Branch branch = getEntityById(id);
+        BranchLocationDto branchLocationDto = new BranchLocationDto(branch.getLatitude(),branch.getLongitude());
+        return branchLocationDto;
+    }
+
+    @Override
     public BranchDto getBranchById(Long id) {
         return BranchMapper.toDto(getEntityById(id));
     }
@@ -45,6 +53,8 @@ public class BranchServiceImpl implements BranchService {
         Branch existingBranch = getEntityById(id);
         existingBranch.setName(newBranchDto.getName());
         existingBranch.setDescription(newBranchDto.getDescription());
+        existingBranch.setLatitude(newBranchDto.getLat());
+        existingBranch.setLongitude(newBranchDto.getLng());
 
         if (newBranchDto.getParentId() != null) {
             Branch parentBranch = getEntityById(newBranchDto.getParentId());

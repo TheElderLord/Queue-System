@@ -1,4 +1,4 @@
-package com.example.nomad.nomad.dto;
+package com.example.nomad.nomad.dto.branch;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,5 +14,7 @@ public class BranchDto {
     private String description;
     private Long parentId;
     private String parentName;
+    private Double lat;
+    private Double lng;
 
 }
