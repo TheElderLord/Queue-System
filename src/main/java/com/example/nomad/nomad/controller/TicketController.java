@@ -39,7 +39,7 @@ public class TicketController {
     }
     @PostMapping("/sessions")
     private ResponseEntity<List<TicketDto>> getByOperatorAndStatus(@RequestBody SessionByBranchAndStatusDto session){
-        return ResponseEntity.ok(ticketService.getTicketsByOpratorBranchIdAndStatus(session));
+        return ResponseEntity.ok(ticketService.getTicketsByBranchIdAndStatus(session));
     }
     @GetMapping("/agent/{agent}")
     private ResponseEntity<List<TicketDto>> getByAgentTickets(@PathVariable String agent){

@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 public class SessionByBranchAndStatusDto {
     private Long branchId;
     private Long operatorId;
+    private Long windowId;
     private TicketStatus status;
 }

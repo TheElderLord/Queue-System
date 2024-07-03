@@ -14,6 +14,7 @@ import com.example.nomad.nomad.mapper.SessionMapper;
 import com.example.nomad.nomad.mapper.TicketMapper;
 import com.example.nomad.nomad.mapper.WindowMapper;
 import com.example.nomad.nomad.model.*;
+import com.example.nomad.nomad.repository.SessionRepository;
 import com.example.nomad.nomad.repository.TicketRepository;
 import com.example.nomad.nomad.service.branch.BranchService;
 import com.example.nomad.nomad.service.operator.OperatorService;
@@ -41,6 +42,7 @@ import org.slf4j.LoggerFactory;
 @AllArgsConstructor
 public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
+    private final SessionRepository sessionRepository;
     private final OperatorService operatorService;
     private final RoleServiceService roleServiceService;
     private final ServService servService;
@@ -109,8 +111,13 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketDto> getTicketsByOpratorBranchIdAndStatus(SessionByBranchAndStatusDto session) {
-        return ticketRepository.findAllByOperatorIdAndBranchIdAndStatus(session.getOperatorId(), session.getBranchId(), session.getStatus()).stream()
+    public List<TicketDto> getTicketsByBranchIdAndStatus(SessionByBranchAndStatusDto session) {
+        if(session.getOperatorId()!=null){
+            return ticketRepository.findAllByOperatorIdAndBranchIdAndStatus(session.getOperatorId(), session.getBranchId(), session.getStatus()).stream()
+                    .map(TicketMapper::toDto).collect(Collectors.toList());
+
+        }
+        return ticketRepository.findAllByBranchIdAndStatus( session.getBranchId(), session.getStatus()).stream()
                 .map(TicketMapper::toDto).collect(Collectors.toList());
     }
 
@@ -217,18 +224,18 @@ public class TicketServiceImpl implements TicketService {
         Branch branch = branchService.getEntityById(newTicket.getBranchId());
 //       // Session session = sessionService.getEntityById(newTicket.getSessionId());
         ServiceModel serviceModel = servService.getEntityById(newTicket.getServiceId());
-        Session session = getSessionWithLeastTicketsAndService(branch.getId(), serviceModel.getId());
-        Operator operator = session.getOperator();
-        logger.info("Found session"+ session);
-        ticket.setOperator(operator);
-        ticket.setWindow(session.getWindow());
+//        Session session = getSessionWithLeastTicketsAndService(branch.getId(), serviceModel.getId());
+//        Operator operator = session.getOperator();
+//        logger.info("Found session"+ session);
+//        ticket.setOperator(operator);
+//        ticket.setWindow(session.getWindow());
         LocalDateTime localDateTime = LocalDateTime.now();
         ZoneId almatyZone = ZoneId.of("Asia/Almaty");
         ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
         ticket.setRegistrationTime(almatyZonedDateTime);
         ticket.setStatus(TicketStatus.NEW);
         ticket.setBranch(branch);
-        ticket.setSession(session);
+//        ticket.setSession(session);
         ticket.setServiceModel(serviceModel);
         ticket.setLanguage(newTicket.getLanguage());
         int randomTicketNumber;
@@ -278,9 +285,13 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDto callNext(SessionByBranchAndStatusDto session) {
-        List<Ticket> tickets = ticketRepository.findAllByOperatorIdAndBranchIdAndStatus(session.getOperatorId(),session.getBranchId(),TicketStatus.NEW);
+        List<Ticket> tickets = ticketRepository.findAllByBranchIdAndStatus(session.getBranchId(),TicketStatus.NEW);
         Ticket ticket = tickets.get(0);
         ticket.setStatus(TicketStatus.INSERVICE);
+        List<Session> session1 = sessionRepository.findByOperatorIdAndActive(session.getOperatorId(), true);
+        ticket.setSession(session1.get(0));
+        ticket.setOperator(operatorService.getEntityById(session.getOperatorId()));
+        ticket.setWindow(windowService.getEntityById(session.getWindowId()));
         LocalDateTime localDateTime = LocalDateTime.now();
         ZoneId almatyZone = ZoneId.of("Asia/Almaty");
         ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
