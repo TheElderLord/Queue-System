@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface OperatorService {
     List<OperatorDto> getOperators();
+    void  servCertainTicket(Long operatorId,Long ticketId);
     List<OperatorDto> getOnlineOperators();
     List<OperatorDto> getOfflineOperators();
     List<OperatorDto> getOperatorsByRoleId(Long id);

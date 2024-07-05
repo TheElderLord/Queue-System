@@ -118,14 +118,22 @@ public class TicketServiceImpl implements TicketService {
         List<RoleServiceModel> roleServiceModels = roleServiceRepository.findAllByRoleId(operator.getRole().getId());
         List<Ticket> tickets = new ArrayList<>();
         for (RoleServiceModel rsm : roleServiceModels) {
-                tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(),TicketStatus.NEW));
+                tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(),session.getStatus()));
         }
-        return tickets.stream().map(TicketMapper::toDto)
+        tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
+        Set<Ticket> set = new HashSet<>(tickets);
+        return set.stream().map(TicketMapper::toDto)
                 .collect(Collectors.toList());
 
 
 //        return ticketRepository.findAllByBranchIdAndStatus( session.getBranchId(), session.getStatus()).stream()
 //                .map(TicketMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TicketDto> getOperatorTickets(Long id) {
+        return ticketRepository.findAllByOperatorIdAndStatus(id,TicketStatus.INSERVICE).stream()
+                .map(TicketMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -236,10 +244,10 @@ public class TicketServiceImpl implements TicketService {
 //        logger.info("Found session"+ session);
 //        ticket.setOperator(operator);
 //        ticket.setWindow(session.getWindow());
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZoneId almatyZone = ZoneId.of("Asia/Almaty");
-        ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
-        ticket.setRegistrationTime(almatyZonedDateTime);
+        ZoneId gmtPlus5 = ZoneId.of("GMT+5");
+        ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
+
+        ticket.setRegistrationTime(gmtPlus5ZonedDateTime);
         ticket.setStatus(TicketStatus.NEW);
         ticket.setBranch(branch);
 //        ticket.setSession(session);
@@ -281,10 +289,9 @@ public class TicketServiceImpl implements TicketService {
             return null;
         }
         ticket.setStatus(TicketStatus.NEW);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZoneId almatyZone = ZoneId.of("Asia/Almaty");
-        ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
-        ticket.setRegistrationTime(almatyZonedDateTime);
+        ZoneId gmtPlus5 = ZoneId.of("GMT+5");
+        ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
+        ticket.setRegistrationTime(gmtPlus5ZonedDateTime);
 
         ticketRepository.save(ticket);
         return TicketMapper.toDto(ticket);
@@ -298,6 +305,8 @@ public class TicketServiceImpl implements TicketService {
         for (RoleServiceModel rsm : roleServiceModels) {
             tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(),TicketStatus.NEW));
         }
+        tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
+//        Set<Ticket> set = new HashSet<>(tickets);
 //        tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
 
 //        logger.info("Next ticket:"+tickets.get(0));
@@ -307,10 +316,10 @@ public class TicketServiceImpl implements TicketService {
         ticket.setSession(session1.get(0));
         ticket.setOperator(operatorService.getEntityById(session.getOperatorId()));
         ticket.setWindow(windowService.getEntityById(session.getWindowId()));
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZoneId almatyZone = ZoneId.of("Asia/Almaty");
-        ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
-        ticket.setServiceStartTime(almatyZonedDateTime);
+        ZoneId gmtPlus5 = ZoneId.of("GMT+5");
+        ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
+
+        ticket.setServiceStartTime(gmtPlus5ZonedDateTime);
         ticketRepository.save(ticket);
         return TicketMapper.toDto(ticket);
     }
@@ -319,11 +328,9 @@ public class TicketServiceImpl implements TicketService {
     public TicketDto complete(Long id, TicketStatus status) {
         Ticket ticket = getEntityById(id);
         ticket.setStatus(status);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZoneId almatyZone = ZoneId.of("Asia/Almaty");
-        ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
-
-        ticket.setServiceEndTime(almatyZonedDateTime);
+        ZoneId gmtPlus5 = ZoneId.of("GMT+5");
+        ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
+        ticket.setServiceEndTime(gmtPlus5ZonedDateTime);
         ticketRepository.save(ticket);
         return TicketMapper.toDto(ticket);
     }
@@ -363,10 +370,9 @@ public class TicketServiceImpl implements TicketService {
         ticket.setSession(SessionMapper.toEntity(session.get(0)));
         Window window = windowService.getEntityById(session.get(0).getWindowId());
         ticket.setWindow(window);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZoneId almatyZone = ZoneId.of("Asia/Almaty");
-        ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
-        ticket.setRegistrationTime(almatyZonedDateTime);
+        ZoneId gmtPlus5 = ZoneId.of("GMT+5");
+        ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
+        ticket.setRegistrationTime(gmtPlus5ZonedDateTime);
         ticket.setDirected(true);
         ticketRepository.save(ticket);
         return TicketMapper.toDto(ticket);

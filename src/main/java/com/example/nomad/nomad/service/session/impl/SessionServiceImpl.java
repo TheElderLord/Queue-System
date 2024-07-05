@@ -116,10 +116,9 @@ public class SessionServiceImpl implements SessionService {
         operatorService.setActive(newSession.getOperatorId());
         session.setActive(true);
         session.setStatus(SessionStatus.ONNLINE);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZoneId almatyZone = ZoneId.of("Asia/Almaty");
-        ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
-        session.setStartTime(almatyZonedDateTime);
+        ZoneId gmtPlus5 = ZoneId.of("GMT+5");
+        ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
+        session.setStartTime(gmtPlus5ZonedDateTime);
         session.setBranch(branch);
         session.setOperator(operator);
         session.setWindow(window);
@@ -137,10 +136,9 @@ public class SessionServiceImpl implements SessionService {
         windowService.setInactive(session.getWindow().getId());
         operatorService.setInactive(session.getOperator().getId());
         session.setStatus(sessionStatus);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        ZoneId almatyZone = ZoneId.of("Asia/Almaty");
-        ZonedDateTime almatyZonedDateTime = localDateTime.atZone(almatyZone);
-        session.setEndTime(almatyZonedDateTime);
+        ZoneId gmtPlus5 = ZoneId.of("GMT+5");
+        ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
+        session.setEndTime(gmtPlus5ZonedDateTime);
         session.setActive(false);
 
         sessionRepository.save(session);

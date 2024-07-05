@@ -1,5 +1,6 @@
 package com.example.nomad.nomad.service.operator.impl;
 
+import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.OperatorDto;
 import com.example.nomad.nomad.dto.operatorAuth.OperatorAuthDto;
 import com.example.nomad.nomad.exception.ForbiddenActionException;
@@ -20,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -37,6 +40,21 @@ public class OperatorServiceImpl implements OperatorService {
     public List<OperatorDto> getOperators() {
         return operatorRepository.findAll().stream().map(
                 OperatorMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public void servCertainTicket(Long operatorId, Long ticketId) {
+        Operator operator = getEntityById(operatorId);
+        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow();
+        ticket.setOperator(operator);
+        Session session = sessionRepository.findByOperatorIdAndActive(operator.getId(),true).get(0);
+        ticket.setSession(session);
+        ZoneId gmtPlus5 = ZoneId.of("GMT+5");
+        ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
+        ticket.setServiceStartTime(gmtPlus5ZonedDateTime);
+        ticket.setWindow(session.getWindow());
+        ticket.setStatus(TicketStatus.INSERVICE);
+        ticketRepository.save(ticket);
     }
 
     @Override
