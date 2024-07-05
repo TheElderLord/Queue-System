@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -22,6 +24,9 @@ public class Role {
     private String description;
     @Column(name = "priority",nullable = false)
     private Long priority;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoleServiceModel> roleServiceModels;
 
     public Role(Long roleId) {
         this.id = roleId;

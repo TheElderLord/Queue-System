@@ -14,6 +14,8 @@ import com.example.nomad.nomad.mapper.SessionMapper;
 import com.example.nomad.nomad.mapper.TicketMapper;
 import com.example.nomad.nomad.mapper.WindowMapper;
 import com.example.nomad.nomad.model.*;
+import com.example.nomad.nomad.repository.RoleRepository;
+import com.example.nomad.nomad.repository.RoleServiceRepository;
 import com.example.nomad.nomad.repository.SessionRepository;
 import com.example.nomad.nomad.repository.TicketRepository;
 import com.example.nomad.nomad.service.branch.BranchService;
@@ -30,10 +32,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory;
 public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final SessionRepository sessionRepository;
+    private final RoleServiceRepository roleServiceRepository;
     private final OperatorService operatorService;
     private final RoleServiceService roleServiceService;
     private final ServService servService;
@@ -57,9 +59,9 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<ServiceModelDto> getAvailableServices(Long branchId,Long serviceId) {
+    public List<ServiceModelDto> getAvailableServices(Long branchId, Long serviceId) {
         // Get a list of active operators
-        List<Session> activeSessionsByBranch = sessionService.getActiveSessionsByBranchId(branchId,true);
+        List<Session> activeSessionsByBranch = sessionService.getActiveSessionsByBranchId(branchId, true);
 
 //        List<OperatorDto> activeOperators = operatorService.getOnlineOperators();
 
@@ -71,7 +73,7 @@ public class TicketServiceImpl implements TicketService {
 
         // Extract the IDs of roles of active operators
         List<Long> roleIds = activeOperators.stream()
-                .map(e->e.getRole().getId())
+                .map(e -> e.getRole().getId())
                 .distinct()  // Ensure distinct role IDs
                 .toList();
 
@@ -87,8 +89,8 @@ public class TicketServiceImpl implements TicketService {
                 .map(servService::getEntityById)
                 .distinct()  // Ensure distinct service models
                 .toList();
-        if(serviceId!=null){
-            return  serviceModels.stream().map(ServiceModelMapper::toDto).distinct()  // Ensure distinct service models
+        if (serviceId != null) {
+            return serviceModels.stream().map(ServiceModelMapper::toDto).distinct()  // Ensure distinct service models
                     .toList();
         }
         List<ServiceModel> parentServices = serviceModels.stream().map(ServiceModel::getParentService).distinct()  // Ensure distinct service models
@@ -111,19 +113,24 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketDto> getTicketsByBranchIdAndStatus(SessionByBranchAndStatusDto session) {
-        if(session.getOperatorId()!=null){
-            return ticketRepository.findAllByOperatorIdAndBranchIdAndStatus(session.getOperatorId(), session.getBranchId(), session.getStatus()).stream()
-                    .map(TicketMapper::toDto).collect(Collectors.toList());
-
+    public List<TicketDto> getTicketsByBranchIdAndStatusAndOperator(SessionByBranchAndStatusDto session) {
+        Operator operator = operatorService.getEntityById(session.getOperatorId());
+        List<RoleServiceModel> roleServiceModels = roleServiceRepository.findAllByRoleId(operator.getRole().getId());
+        List<Ticket> tickets = new ArrayList<>();
+        for (RoleServiceModel rsm : roleServiceModels) {
+                tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(),TicketStatus.NEW));
         }
-        return ticketRepository.findAllByBranchIdAndStatus( session.getBranchId(), session.getStatus()).stream()
-                .map(TicketMapper::toDto).collect(Collectors.toList());
+        return tickets.stream().map(TicketMapper::toDto)
+                .collect(Collectors.toList());
+
+
+//        return ticketRepository.findAllByBranchIdAndStatus( session.getBranchId(), session.getStatus()).stream()
+//                .map(TicketMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<TicketDto> getQueueTickets(Long branchId) {
-        List<Ticket> tickets =  ticketRepository.findAllByBranchIdAndStatus(branchId, TicketStatus.INSERVICE);
+        List<Ticket> tickets = ticketRepository.findAllByBranchIdAndStatus(branchId, TicketStatus.INSERVICE);
         return tickets.stream()
                 .map(TicketMapper::toDto).collect(Collectors.toList());
     }
@@ -174,8 +181,8 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Session getSessionWithLeastTicketsAndService(Long branchId, Long serviceId) {
-        List<Session> sessionByBranch = sessionService.getActiveSessionsByBranchId(branchId,true);
-        logger.info("ACTIVE SESSIONS BY BRANCH:"+sessionByBranch.stream().toList());
+        List<Session> sessionByBranch = sessionService.getActiveSessionsByBranchId(branchId, true);
+        logger.info("ACTIVE SESSIONS BY BRANCH:" + sessionByBranch.stream().toList());
         int min = Integer.MAX_VALUE;
         int current;
         int index = -1; // Initialize with -1 to handle cases where there are no sessions.
@@ -183,14 +190,14 @@ public class TicketServiceImpl implements TicketService {
 //        SessionByBranchAndStatusDto session = new SessionByBranchAndStatusDto(branchId,serviceId,TicketStatus.NEW);
         for (int i = 0; i < sessionByBranch.size(); i++) {
             current = ticketRepository.findAllBySessionId(sessionByBranch.get(i).getId()).size();
-            logger.info("TICKETS BY SESSION:"+current);
+            logger.info("TICKETS BY SESSION:" + current);
 
             if (current < min) {
                 min = current;
                 index = i;
             }
         }
-        logger.info("LEAST TICKET SESSION:"+sessionByBranch.get(index));
+        logger.info("LEAST TICKET SESSION:" + sessionByBranch.get(index));
 
         if (index != -1) {
             // Return the session with the least tickets
@@ -202,15 +209,15 @@ public class TicketServiceImpl implements TicketService {
         }
     }
 
-    
+
     @Override
     public TicketDto createTicket(TicketRegisterDto newTicket) {
 //        logger.info("Creating tickets:"+newTicket);
 
         List<Ticket> agentNotFinishedTickets;
-        if(newTicket.getTerminalType()== TerminalType.MOBILE){
-            agentNotFinishedTickets  = ticketRepository.findAllByAgentAndStatus(newTicket.getAgent(), TicketStatus.NEW);
-            if(!agentNotFinishedTickets.isEmpty()){
+        if (newTicket.getTerminalType() == TerminalType.MOBILE) {
+            agentNotFinishedTickets = ticketRepository.findAllByAgentAndStatus(newTicket.getAgent(), TicketStatus.NEW);
+            if (!agentNotFinishedTickets.isEmpty()) {
                 throw new ForbiddenActionException("User has incomplete tickets");
             }
         }
@@ -270,7 +277,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public TicketDto activateBookedTicket(int code) {
         Ticket ticket = ticketRepository.findByBookingCode(code);
-        if(ticket!=null){
+        if (ticket != null) {
             return null;
         }
         ticket.setStatus(TicketStatus.NEW);
@@ -285,7 +292,15 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDto callNext(SessionByBranchAndStatusDto session) {
-        List<Ticket> tickets = ticketRepository.findAllByBranchIdAndStatus(session.getBranchId(),TicketStatus.NEW);
+        Operator operator = operatorService.getEntityById(session.getOperatorId());
+        List<RoleServiceModel> roleServiceModels = roleServiceRepository.findAllByRoleId(operator.getRole().getId());
+        List<Ticket> tickets = new ArrayList<>();
+        for (RoleServiceModel rsm : roleServiceModels) {
+            tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(),TicketStatus.NEW));
+        }
+//        tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
+
+//        logger.info("Next ticket:"+tickets.get(0));
         Ticket ticket = tickets.get(0);
         ticket.setStatus(TicketStatus.INSERVICE);
         List<Session> session1 = sessionRepository.findByOperatorIdAndActive(session.getOperatorId(), true);
@@ -301,7 +316,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketDto complete(Long id,TicketStatus status) {
+    public TicketDto complete(Long id, TicketStatus status) {
         Ticket ticket = getEntityById(id);
         ticket.setStatus(status);
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -314,7 +329,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketDto setStatus(Long id,TicketStatus status) {
+    public TicketDto setStatus(Long id, TicketStatus status) {
         Ticket ticket = getEntityById(id);
         ticket.setStatus(status);
         return TicketMapper.toDto(ticket);
@@ -360,7 +375,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Ticket getEntityById(Long id) {
         return ticketRepository.findById(id).orElseThrow(
-                ()->new ResourceNotFoundException("Ticket does not exist")
+                () -> new ResourceNotFoundException("Ticket does not exist")
         );
     }
 }
