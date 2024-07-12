@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Service
 @Primary
@@ -298,34 +299,39 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @ExceptionHandler(NullPointerException.class)
     public TicketDto callNext(SessionByBranchAndStatusDto session) {
         Operator operator = operatorService.getEntityById(session.getOperatorId());
         List<RoleServiceModel> roleServiceModels = roleServiceRepository.findAllByRoleId(operator.getRole().getId());
         List<Ticket> tickets = new ArrayList<>();
         for (RoleServiceModel rsm : roleServiceModels) {
-            tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(),TicketStatus.NEW));
+            tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(), TicketStatus.NEW));
         }
         tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
-//        Set<Ticket> set = new HashSet<>(tickets);
-//        tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
 
-//        logger.info("Next ticket:"+tickets.get(0));
-        if(tickets.isEmpty()){
+        if (tickets.isEmpty()) {
             return new TicketDto();
         }
+
         Ticket ticket = tickets.get(0);
         ticket.setStatus(TicketStatus.INSERVICE);
         List<Session> session1 = sessionRepository.findByOperatorIdAndActive(session.getOperatorId(), true);
+        if (session1 == null || session1.isEmpty()) {
+            throw new ResourceNotFoundException("Active session not found for operator with ID: " + session.getOperatorId());
+        }
+
         ticket.setSession(session1.get(0));
         ticket.setOperator(operatorService.getEntityById(session.getOperatorId()));
         ticket.setWindow(windowService.getEntityById(session.getWindowId()));
+
         ZoneId gmtPlus5 = ZoneId.of("GMT+5");
         ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
-
         ticket.setServiceStartTime(gmtPlus5ZonedDateTime);
+
         ticketRepository.save(ticket);
         return TicketMapper.toDto(ticket);
     }
+
 
     @Override
     public TicketDto complete(Long id, TicketStatus status) {
