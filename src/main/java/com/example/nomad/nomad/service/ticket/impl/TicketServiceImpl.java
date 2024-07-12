@@ -310,6 +310,9 @@ public class TicketServiceImpl implements TicketService {
 //        tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
 
 //        logger.info("Next ticket:"+tickets.get(0));
+        if(tickets.isEmpty()){
+            return new TicketDto();
+        }
         Ticket ticket = tickets.get(0);
         ticket.setStatus(TicketStatus.INSERVICE);
         List<Session> session1 = sessionRepository.findByOperatorIdAndActive(session.getOperatorId(), true);
