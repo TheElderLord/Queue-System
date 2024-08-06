@@ -221,8 +221,6 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDto createTicket(TicketRegisterDto newTicket) {
-//        logger.info("Creating tickets:"+newTicket);
-
         List<Ticket> agentNotFinishedTickets;
         if (newTicket.getTerminalType() == TerminalType.MOBILE) {
             agentNotFinishedTickets = ticketRepository.findAllByAgentAndStatus(newTicket.getAgent(), TicketStatus.NEW);
@@ -238,31 +236,34 @@ public class TicketServiceImpl implements TicketService {
 
         Ticket ticket = TicketMapper.toEntity(ticketDto);
         Branch branch = branchService.getEntityById(newTicket.getBranchId());
-//       // Session session = sessionService.getEntityById(newTicket.getSessionId());
         ServiceModel serviceModel = servService.getEntityById(newTicket.getServiceId());
-//        Session session = getSessionWithLeastTicketsAndService(branch.getId(), serviceModel.getId());
-//        Operator operator = session.getOperator();
-//        logger.info("Found session"+ session);
-//        ticket.setOperator(operator);
-//        ticket.setWindow(session.getWindow());
         ZoneId gmtPlus5 = ZoneId.of("GMT+5");
         ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
 
         ticket.setRegistrationTime(gmtPlus5ZonedDateTime);
         ticket.setStatus(TicketStatus.NEW);
         ticket.setBranch(branch);
-//        ticket.setSession(session);
         ticket.setServiceModel(serviceModel);
         ticket.setLanguage(newTicket.getLanguage());
-        int randomTicketNumber;
-        do {
-            randomTicketNumber = new Random().nextInt(100);
-        } while (ticketRepository.existsByTicketNumber(randomTicketNumber));
 
+        int randomTicketNumber = getAvailableTicketNumber();
         ticket.setTicketNumber(randomTicketNumber);
 
         ticketRepository.save(ticket);
         return TicketMapper.toDto(ticket);
+    }
+
+    private int getAvailableTicketNumber() {
+        Set<Integer> usedTicketNumbers = ticketRepository.findAll().stream()
+                .map(Ticket::getTicketNumber)
+                .collect(Collectors.toSet());
+
+        int ticketNumber = 1;
+        while (usedTicketNumbers.contains(ticketNumber)) {
+            ticketNumber++;
+        }
+
+        return ticketNumber;
     }
 
     @Override
@@ -286,7 +287,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public TicketDto activateBookedTicket(int code) {
         Ticket ticket = ticketRepository.findByBookingCode(code);
-        if (ticket != null) {
+        if (ticket == null) {
             return null;
         }
         ticket.setStatus(TicketStatus.NEW);
