@@ -246,18 +246,26 @@ public class TicketServiceImpl implements TicketService {
         ticket.setServiceModel(serviceModel);
         ticket.setLanguage(newTicket.getLanguage());
 
-        int randomTicketNumber = getAvailableTicketNumber();
+        int randomTicketNumber = getAvailableTicketNumber(newTicket.getBranchId());
         ticket.setTicketNumber(randomTicketNumber);
 
         ticketRepository.save(ticket);
         return TicketMapper.toDto(ticket);
     }
 
-    private int getAvailableTicketNumber() {
-        Set<Integer> usedTicketNumbers = ticketRepository.findAll().stream()
+    private int getAvailableTicketNumber(Long branchId) {
+        ZoneId zoneId = ZoneId.of("GMT+5"); // or your relevant time zone
+        ZonedDateTime startOfDay = ZonedDateTime.now(zoneId).toLocalDate().atStartOfDay(zoneId);
+        ZonedDateTime endOfDay = startOfDay.plusDays(1).minusNanos(1);
+
+        // Fetch all tickets for the specific branch and today's date
+        Set<Integer> usedTicketNumbers = ticketRepository
+                .findAllByBranchIdAndRegistrationTimeBetween(branchId, startOfDay, endOfDay)
+                .stream()
                 .map(Ticket::getTicketNumber)
                 .collect(Collectors.toSet());
 
+        // Find the first available ticket number
         int ticketNumber = 1;
         while (usedTicketNumbers.contains(ticketNumber)) {
             ticketNumber++;
@@ -265,6 +273,7 @@ public class TicketServiceImpl implements TicketService {
 
         return ticketNumber;
     }
+
 
     @Override
     public TicketDto bookTicket(TicketBookDto bookDto) {

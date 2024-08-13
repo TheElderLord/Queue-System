@@ -8,6 +8,11 @@ spring:
     username: postgres
     password: root
     driverClassName: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 30
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
   main:
     allow-circular-references: true
 
@@ -28,10 +33,10 @@ spring:
     locations: classpath:db/migration
 
 # Spring Security
-security:
-  jwt:
-    secret-key: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
-    expiration-time: 3600000
+#security:
+#  jwt:
+#    secret-key: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+#    expiration-time: 3600000
 
 
 
@@ -39,9 +44,5 @@ security:
   # spring.security.oauth2.resourceserver.jwt.issuer-uri: ${JWT_ISSUER_URI}
 
   # HikariCP Configuration
-  datasource:
-    hikari:
-      maximum-pool-size: 30
-      connection-timeout: 30000
-      idle-timeout: 600000
-      max-lifetime: 1800000
+
+
