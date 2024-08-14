@@ -300,16 +300,12 @@ public class TicketServiceImpl implements TicketService {
         // Find the first available ticket number within the range
         int ticketNumber = range.start;
         while (usedTicketNumbers.contains(ticketNumber) ) {
-
-            if (ticketNumber > range.end) {
-                ticketNumber = ticketNumber+100;
-//            throw new IllegalStateException("No available ticket numbers in the specified range for service ID: " + serviceId);
-            }
-            else{
                 ticketNumber++;
-            }
         }
-
+        if (ticketNumber > range.end) {
+            range.end = ticketNumber+1000;
+//            throw new IllegalStateException("No available ticket numbers in the specified range for service ID: " + serviceId);
+        }
 
 
 
