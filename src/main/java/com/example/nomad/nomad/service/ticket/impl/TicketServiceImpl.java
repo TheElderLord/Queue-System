@@ -299,12 +299,12 @@ public class TicketServiceImpl implements TicketService {
 
         // Find the first available ticket number within the range
         int ticketNumber = range.start;
-        while (usedTicketNumbers.contains(ticketNumber) && ticketNumber <= range.end) {
+        while (usedTicketNumbers.contains(ticketNumber) ) {
             ticketNumber++;
         }
 
+
         if (ticketNumber > range.end) {
-            ticketNumber++;
             ticketNumber = (ticketNumber*10)+1;
 //            throw new IllegalStateException("No available ticket numbers in the specified range for service ID: " + serviceId);
         }
