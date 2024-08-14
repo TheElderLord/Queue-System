@@ -1,6 +1,5 @@
 package com.example.nomad.nomad.service.ticket.impl;
 
-import com.example.nomad.nomad.Enum.SessionStatus;
 import com.example.nomad.nomad.Enum.TerminalType;
 import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.*;
@@ -14,7 +13,6 @@ import com.example.nomad.nomad.mapper.SessionMapper;
 import com.example.nomad.nomad.mapper.TicketMapper;
 import com.example.nomad.nomad.mapper.WindowMapper;
 import com.example.nomad.nomad.model.*;
-import com.example.nomad.nomad.repository.RoleRepository;
 import com.example.nomad.nomad.repository.RoleServiceRepository;
 import com.example.nomad.nomad.repository.SessionRepository;
 import com.example.nomad.nomad.repository.TicketRepository;
@@ -29,7 +27,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -56,8 +54,14 @@ public class TicketServiceImpl implements TicketService {
 
 
     private final Map<Long, Range> serviceTicketRanges = new HashMap<>();
+    private static LocalDate lastResetDate;
 
     {
+        initializeRanges();
+        // Add more ranges as needed
+    }
+
+    private void initializeRanges(){
         serviceTicketRanges.put(10L, new Range(1, 100));
         serviceTicketRanges.put(25L, new Range(200, 300));
         serviceTicketRanges.put(29L, new Range(300, 400));
@@ -77,7 +81,6 @@ public class TicketServiceImpl implements TicketService {
         serviceTicketRanges.put(65L, new Range(500, 600));
         serviceTicketRanges.put(66L, new Range(600, 700));
         serviceTicketRanges.put(103L, new Range(700, 800));
-        // Add more ranges as needed
     }
 
     @Override
@@ -284,6 +287,10 @@ public class TicketServiceImpl implements TicketService {
         ZonedDateTime startOfDay = ZonedDateTime.now(zoneId).toLocalDate().atStartOfDay(zoneId);
         ZonedDateTime endOfDay = startOfDay.plusDays(1).minusNanos(1);
 
+        LocalDate currentDate = ZonedDateTime.now(zoneId).toLocalDate();
+
+        // Reset ranges if needed
+        resetRangesIfNeeded(currentDate);
         // Fetch all tickets for the specific branch and today's date
         Set<Integer> usedTicketNumbers = ticketRepository
                 .findAllByBranchIdAndRegistrationTimeBetween(branchId, startOfDay, endOfDay)
@@ -302,6 +309,7 @@ public class TicketServiceImpl implements TicketService {
         while (usedTicketNumbers.contains(ticketNumber) ) {
                 ticketNumber++;
         }
+
         if (ticketNumber > range.end) {
             range.start = ticketNumber+1000;
             range.end = range.start*2;
@@ -312,6 +320,16 @@ public class TicketServiceImpl implements TicketService {
 
 
         return ticketNumber;
+    }
+    private void resetRangesIfNeeded(LocalDate currentDate) {
+        if (lastResetDate == null || !lastResetDate.isEqual(currentDate)) {
+            logger.info("Resetting ticket ranges for a new day.");
+
+            // Reset each range to its initial start and end values.
+            initializeRanges();
+
+            lastResetDate = currentDate;
+        }
     }
 
 
