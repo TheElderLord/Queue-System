@@ -54,6 +54,32 @@ public class TicketServiceImpl implements TicketService {
     private final WindowService windowService;
     private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
+
+    private final Map<Long, Range> serviceTicketRanges = new HashMap<>();
+
+    {
+        serviceTicketRanges.put(10L, new Range(1, 100));
+        serviceTicketRanges.put(25L, new Range(200, 300));
+        serviceTicketRanges.put(29L, new Range(300, 400));
+        serviceTicketRanges.put(31L, new Range(400, 500));
+
+        serviceTicketRanges.put(67L, new Range(1, 100));
+        serviceTicketRanges.put(68L, new Range(200, 300));
+        serviceTicketRanges.put(70L, new Range(500, 600));
+        serviceTicketRanges.put(71L, new Range(500, 600));
+        serviceTicketRanges.put(72L, new Range(600, 700));
+        serviceTicketRanges.put(102L, new Range(700, 800));
+
+        serviceTicketRanges.put(60L, new Range(1, 100));
+        serviceTicketRanges.put(61L, new Range(200, 300));
+        serviceTicketRanges.put(62L, new Range(300, 400));
+        serviceTicketRanges.put(64L, new Range(400, 500));
+        serviceTicketRanges.put(65L, new Range(500, 600));
+        serviceTicketRanges.put(66L, new Range(600, 700));
+        serviceTicketRanges.put(103L, new Range(700, 800));
+        // Add more ranges as needed
+    }
+
     @Override
     public List<TicketDto> getTickets() {
         return ticketRepository.findAll().stream().map(TicketMapper::toDto).collect(Collectors.toList());
@@ -246,15 +272,15 @@ public class TicketServiceImpl implements TicketService {
         ticket.setServiceModel(serviceModel);
         ticket.setLanguage(newTicket.getLanguage());
 
-        int randomTicketNumber = getAvailableTicketNumber(newTicket.getBranchId());
+        int randomTicketNumber = getAvailableTicketNumber(newTicket.getBranchId(),newTicket.getServiceId());
         ticket.setTicketNumber(randomTicketNumber);
 
         ticketRepository.save(ticket);
         return TicketMapper.toDto(ticket);
     }
 
-    private int getAvailableTicketNumber(Long branchId) {
-        ZoneId zoneId = ZoneId.of("GMT+5"); // or your relevant time zone
+    private int getAvailableTicketNumber(Long branchId, Long serviceId) {
+        ZoneId zoneId = ZoneId.of("GMT+5");
         ZonedDateTime startOfDay = ZonedDateTime.now(zoneId).toLocalDate().atStartOfDay(zoneId);
         ZonedDateTime endOfDay = startOfDay.plusDays(1).minusNanos(1);
 
@@ -265,14 +291,25 @@ public class TicketServiceImpl implements TicketService {
                 .map(Ticket::getTicketNumber)
                 .collect(Collectors.toSet());
 
-        // Find the first available ticket number
-        int ticketNumber = 1;
-        while (usedTicketNumbers.contains(ticketNumber)) {
+        // Fetch the range for the service
+        Range range = serviceTicketRanges.get(serviceId);
+        if (range == null) {
+            throw new IllegalArgumentException("No ticket number range defined for service ID: " + serviceId);
+        }
+
+        // Find the first available ticket number within the range
+        int ticketNumber = range.start;
+        while (usedTicketNumbers.contains(ticketNumber) && ticketNumber <= range.end) {
             ticketNumber++;
+        }
+
+        if (ticketNumber > range.end) {
+            throw new IllegalStateException("No available ticket numbers in the specified range for service ID: " + serviceId);
         }
 
         return ticketNumber;
     }
+
 
 
     @Override
@@ -403,4 +440,14 @@ public class TicketServiceImpl implements TicketService {
                 () -> new ResourceNotFoundException("Ticket does not exist")
         );
     }
+    private static class Range {
+        int start;
+        int end;
+
+        Range(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+
 }
