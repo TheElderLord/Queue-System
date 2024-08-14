@@ -301,13 +301,14 @@ public class TicketServiceImpl implements TicketService {
         int ticketNumber = range.start;
         while (usedTicketNumbers.contains(ticketNumber) ) {
             ticketNumber++;
-        }
-
-
-        if (ticketNumber > range.end) {
-            ticketNumber = (ticketNumber*10)+1;
+            if (ticketNumber > range.end) {
+                ticketNumber = (ticketNumber*10)+1;
 //            throw new IllegalStateException("No available ticket numbers in the specified range for service ID: " + serviceId);
+            }
         }
+
+
+
 
         return ticketNumber;
     }
