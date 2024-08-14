@@ -303,7 +303,9 @@ public class TicketServiceImpl implements TicketService {
                 ticketNumber++;
         }
         if (ticketNumber > range.end) {
-            range.end = ticketNumber+1000;
+            range.start = ticketNumber+1000;
+            range.end = range.start*2;
+//            ticketNumber +=1000;
 //            throw new IllegalStateException("No available ticket numbers in the specified range for service ID: " + serviceId);
         }
 
