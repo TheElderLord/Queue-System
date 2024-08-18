@@ -3,6 +3,8 @@ package com.example.nomad.nomad.repository;
 import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.model.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -19,7 +21,11 @@ public interface TicketRepository extends JpaRepository<Ticket,Long> {
     List<Ticket> findAllByAgentAndStatus(String agent,TicketStatus status);
     List<Ticket> findAllByOperatorIdAndBranchIdAndStatus(Long session_id,Long branch_id ,TicketStatus status );
     List<Ticket> findAllByBranchIdAndStatus(Long branchId,TicketStatus status);
+    List<Ticket> findAllByBranchIdAndStatusAndRegistrationTimeBetween(Long branchId,TicketStatus status,ZonedDateTime startOfDay, ZonedDateTime endOfDay);
     List<Ticket> findAllByBranchIdAndRegistrationTimeBetween(Long branchId, ZonedDateTime startOfDay, ZonedDateTime endOfDay);
+
+    @Query("SELECT t FROM Ticket t WHERE t.status = :status AND t.registrationTime < :time")
+    List<Ticket> findAllByStatusAndRegistrationTimeBefore(@Param("status") TicketStatus status, @Param("time") ZonedDateTime time);
 
     boolean existsByTicketNumber(int ticketNumber);
     boolean existsByBookingCode(int bookingCode);

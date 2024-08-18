@@ -25,6 +25,7 @@ import com.example.nomad.nomad.service.ticket.TicketService;
 import com.example.nomad.nomad.service.window.WindowService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -168,7 +169,11 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<TicketDto> getQueueTickets(Long branchId) {
-        List<Ticket> tickets = ticketRepository.findAllByBranchIdAndStatus(branchId, TicketStatus.INSERVICE);
+        ZoneId zoneId = ZoneId.of("GMT+5");
+        ZonedDateTime startOfDay = ZonedDateTime.now(zoneId).toLocalDate().atStartOfDay(zoneId);
+        ZonedDateTime endOfDay = startOfDay.plusDays(1).minusNanos(1);
+        List<Ticket> tickets =
+                ticketRepository.findAllByBranchIdAndStatusAndRegistrationTimeBetween(branchId, TicketStatus.INSERVICE,startOfDay,endOfDay);
         return tickets.stream()
                 .map(TicketMapper::toDto).collect(Collectors.toList());
     }
@@ -462,7 +467,30 @@ public class TicketServiceImpl implements TicketService {
                 () -> new ResourceNotFoundException("Ticket does not exist")
         );
     }
-    private static class Range {
+
+    @Scheduled(cron = "0 0 21 * * ?")
+    public void markTicketsAsMissed() {
+        ZoneId zoneId = ZoneId.of("GMT+5"); // Adjust the time zone if necessary
+        ZonedDateTime now = ZonedDateTime.now(zoneId);
+
+        List<Ticket> ticketsToUpdate = ticketRepository.findAllByStatusAndRegistrationTimeBefore(TicketStatus.NEW, now);
+
+        for (Ticket ticket : ticketsToUpdate) {
+            ticket.setStatus(TicketStatus.FORCED);
+            ticket.setServiceEndTime(now); // Optional: Record the time when the ticket was marked as MISSED
+            ticketRepository.save(ticket);
+        }
+        List<Ticket> notFinished = ticketRepository.findAllByStatusAndRegistrationTimeBefore(TicketStatus.INSERVICE, now);
+
+        for (Ticket ticket : notFinished) {
+            ticket.setStatus(TicketStatus.FORCED);
+            ticket.setServiceEndTime(now); // Optional: Record the time when the ticket was marked as MISSED
+            ticketRepository.save(ticket);
+        }
+    }
+
+
+        private static class Range {
         int start;
         int end;
 
