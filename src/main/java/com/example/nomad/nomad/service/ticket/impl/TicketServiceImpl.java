@@ -63,10 +63,12 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private void initializeRanges(){
-        serviceTicketRanges.put(10L, new Range(1, 1000));
-        serviceTicketRanges.put(152L, new Range(1000, 2000));
-        serviceTicketRanges.put(153L, new Range(2000, 3000));
-        serviceTicketRanges.put(31L, new Range(3000, 4000));
+        serviceTicketRanges.put(31L, new Range(1, 1000));
+        serviceTicketRanges.put(25L, new Range(1000, 2000));
+        serviceTicketRanges.put(29L, new Range(2000, 3000));
+        serviceTicketRanges.put(10L, new Range(3000, 4000));
+        serviceTicketRanges.put(152L, new Range(4000, 4500));
+        serviceTicketRanges.put(153L, new Range(4500, 5000));
 
         serviceTicketRanges.put(67L, new Range(1, 100));
         serviceTicketRanges.put(68L, new Range(200, 300));
