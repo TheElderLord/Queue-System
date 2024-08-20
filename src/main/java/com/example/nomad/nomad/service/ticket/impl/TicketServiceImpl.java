@@ -140,7 +140,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<TicketDto> getAgentTickets(String agent) {
-        return ticketRepository.findAllByAgent(agent).stream()
+        return ticketRepository.findAllByAgentAndStatusNot(agent,TicketStatus.MISSED).stream()
                 .map(TicketMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -435,6 +435,9 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public void deleteTicket(Long id) {
         Ticket ticket = getEntityById(id);
+        ZoneId gmtPlus5 = ZoneId.of("GMT+5");
+        ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
+        ticket.setServiceEndTime(gmtPlus5ZonedDateTime);
         ticket.setStatus(TicketStatus.MISSED);
         ticketRepository.save(ticket);
     }

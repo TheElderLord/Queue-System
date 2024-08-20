@@ -19,6 +19,9 @@ public interface TicketRepository extends JpaRepository<Ticket,Long> {
     List<Ticket> findAllByStatus(TicketStatus status);
     List<Ticket> findAllByAgent(String agent);
     List<Ticket> findAllByAgentAndStatus(String agent,TicketStatus status);
+    @Query("SELECT t FROM Ticket t WHERE t.agent = :agent AND t.status <> :status")
+    List<Ticket> findAllByAgentAndStatusNot(@Param("agent") String agent, @Param("status") TicketStatus status);
+
     List<Ticket> findAllByOperatorIdAndBranchIdAndStatus(Long session_id,Long branch_id ,TicketStatus status );
     List<Ticket> findAllByBranchIdAndStatus(Long branchId,TicketStatus status);
     List<Ticket> findAllByBranchIdAndStatusAndRegistrationTimeBetween(Long branchId,TicketStatus status,ZonedDateTime startOfDay, ZonedDateTime endOfDay);
