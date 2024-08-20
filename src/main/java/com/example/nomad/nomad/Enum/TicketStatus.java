@@ -7,6 +7,7 @@ public enum TicketStatus {
     COMPLETED,
     MISSED,
     ZOMBIE,
-    FORCED
+    FORCED,
+    REMOVED
 
 }
