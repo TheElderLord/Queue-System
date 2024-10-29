@@ -63,27 +63,17 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private void initializeRanges(){
-        serviceTicketRanges.put(152L, new Range(1, 1000));
-        serviceTicketRanges.put(25L, new Range(1000, 2000));
-        serviceTicketRanges.put(29L, new Range(2000, 3000));
-        serviceTicketRanges.put(10L, new Range(3000, 4000));
-        serviceTicketRanges.put(31L, new Range(4000, 4500));
-        serviceTicketRanges.put(153L, new Range(4500, 5000));
 
-        serviceTicketRanges.put(67L, new Range(1, 100));
-        serviceTicketRanges.put(68L, new Range(200, 300));
-        serviceTicketRanges.put(70L, new Range(500, 600));
-        serviceTicketRanges.put(71L, new Range(500, 600));
-        serviceTicketRanges.put(72L, new Range(600, 700));
-        serviceTicketRanges.put(102L, new Range(700, 800));
 
-        serviceTicketRanges.put(60L, new Range(1, 100));
-        serviceTicketRanges.put(61L, new Range(200, 300));
-        serviceTicketRanges.put(62L, new Range(300, 400));
-        serviceTicketRanges.put(64L, new Range(400, 500));
-        serviceTicketRanges.put(65L, new Range(500, 600));
-        serviceTicketRanges.put(66L, new Range(600, 700));
-        serviceTicketRanges.put(103L, new Range(700, 800));
+        serviceTicketRanges.put(1L, new Range(1, 100));
+        serviceTicketRanges.put(2L, new Range(200, 300));
+        serviceTicketRanges.put(3L, new Range(300, 400));
+        serviceTicketRanges.put(4L, new Range(400, 500));
+        serviceTicketRanges.put(5L, new Range(500, 600));
+        serviceTicketRanges.put(6L, new Range(600, 700));
+        serviceTicketRanges.put(7L, new Range(700, 800));
+        serviceTicketRanges.put(8L, new Range(700, 800));
+        serviceTicketRanges.put(9L, new Range(700, 800));
     }
 
     @Override
