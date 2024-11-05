@@ -16,9 +16,9 @@ public class ServiceModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "name",nullable = false)
+    @Column(name = "name",nullable = false,length = 500)
     private String name;
-    @Column(name = "description")
+    @Column(name = "description",length = 500)
     private String description;
     @Column(name = "max_serv_time")
     private Long maxServTime= 1000L;
