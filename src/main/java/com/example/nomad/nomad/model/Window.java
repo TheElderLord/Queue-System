@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -29,6 +31,9 @@ public class Window {
     @Column(name = "active",nullable = false,columnDefinition = "boolean default false")
     private boolean active;
     private String description;
+
+    @OneToMany(mappedBy = "window", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WindowServiceModel> windowServiceModels;
 
 
 }

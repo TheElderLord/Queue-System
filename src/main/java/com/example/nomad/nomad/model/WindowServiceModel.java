@@ -6,12 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "role_services")
-public class RoleServiceModel {
+@Table(name = "window_services")
+public class WindowServiceModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -23,8 +25,8 @@ public class RoleServiceModel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.MERGE)
-    @JoinColumn(name = "role_id",nullable = false)
-    private Role role;
+    @JoinColumn(name = "window_id",nullable = false)
+    private Window window;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.MERGE)

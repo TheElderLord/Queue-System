@@ -25,7 +25,6 @@ import com.example.nomad.nomad.service.ticket.TicketService;
 import com.example.nomad.nomad.service.window.WindowService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -138,9 +137,9 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<TicketDto> getTicketsByBranchIdAndStatusAndOperator(SessionByBranchAndStatusDto session) {
         Operator operator = operatorService.getEntityById(session.getOperatorId());
-        List<RoleServiceModel> roleServiceModels = roleServiceRepository.findAllByRoleId(operator.getRole().getId());
+        List<RoleServiceModel> roleservices = roleServiceRepository.findAllByRoleId(operator.getRole().getId());
         List<Ticket> tickets = new ArrayList<>();
-        for (RoleServiceModel rsm : roleServiceModels) {
+        for (RoleServiceModel rsm : roleservices) {
                 tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(),session.getStatus()));
         }
         tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
@@ -368,9 +367,9 @@ public class TicketServiceImpl implements TicketService {
     @ExceptionHandler(NullPointerException.class)
     public TicketDto callNext(SessionByBranchAndStatusDto session) {
         Operator operator = operatorService.getEntityById(session.getOperatorId());
-        List<RoleServiceModel> roleServiceModels = roleServiceRepository.findAllByRoleId(operator.getRole().getId());
+        List<RoleServiceModel> roleservices = roleServiceRepository.findAllByRoleId(operator.getRole().getId());
         List<Ticket> tickets = new ArrayList<>();
-        for (RoleServiceModel rsm : roleServiceModels) {
+        for (RoleServiceModel rsm : roleservices) {
             tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(), TicketStatus.NEW));
         }
         tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
@@ -465,26 +464,26 @@ public class TicketServiceImpl implements TicketService {
         );
     }
 
-    @Scheduled(cron = "0 0 21 * * ?")
-    public void markTicketsAsMissed() {
-        ZoneId zoneId = ZoneId.of("GMT+5"); // Adjust the time zone if necessary
-        ZonedDateTime now = ZonedDateTime.now(zoneId);
-
-        List<Ticket> ticketsToUpdate = ticketRepository.findAllByStatusAndRegistrationTimeBefore(TicketStatus.NEW, now);
-
-        for (Ticket ticket : ticketsToUpdate) {
-            ticket.setStatus(TicketStatus.FORCED);
-            ticket.setServiceEndTime(now); // Optional: Record the time when the ticket was marked as MISSED
-            ticketRepository.save(ticket);
-        }
-        List<Ticket> notFinished = ticketRepository.findAllByStatusAndRegistrationTimeBefore(TicketStatus.INSERVICE, now);
-
-        for (Ticket ticket : notFinished) {
-            ticket.setStatus(TicketStatus.FORCED);
-            ticket.setServiceEndTime(now); // Optional: Record the time when the ticket was marked as MISSED
-            ticketRepository.save(ticket);
-        }
-    }
+//    @Scheduled(cron = "0 0 21 * * ?")
+//    public void markTicketsAsMissed() {
+//        ZoneId zoneId = ZoneId.of("GMT+5"); // Adjust the time zone if necessary
+//        ZonedDateTime now = ZonedDateTime.now(zoneId);
+//
+//        List<Ticket> ticketsToUpdate = ticketRepository.findAllByStatusAndRegistrationTimeBefore(TicketStatus.NEW, now);
+//
+//        for (Ticket ticket : ticketsToUpdate) {
+//            ticket.setStatus(TicketStatus.FORCED);
+//            ticket.setServiceEndTime(now); // Optional: Record the time when the ticket was marked as MISSED
+//            ticketRepository.save(ticket);
+//        }
+//        List<Ticket> notFinished = ticketRepository.findAllByStatusAndRegistrationTimeBefore(TicketStatus.INSERVICE, now);
+//
+//        for (Ticket ticket : notFinished) {
+//            ticket.setStatus(TicketStatus.FORCED);
+//            ticket.setServiceEndTime(now); // Optional: Record the time when the ticket was marked as MISSED
+//            ticketRepository.save(ticket);
+//        }
+//    }
 
 
         private static class Range {

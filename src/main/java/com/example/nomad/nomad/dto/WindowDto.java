@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 public class WindowDto {
@@ -15,5 +17,6 @@ public class WindowDto {
     private String name;
     private String description;
     private boolean active;
+    private List<WindowServiceModelDto> windowServiceModelDtos;
 
 }

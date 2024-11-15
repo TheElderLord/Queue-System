@@ -9,7 +9,6 @@ import com.example.nomad.nomad.model.Role;
 import com.example.nomad.nomad.model.ServiceModel;
 import com.example.nomad.nomad.repository.RoleRepository;
 import com.example.nomad.nomad.repository.RoleServiceRepository;
-import com.example.nomad.nomad.service.roleService.RoleServiceService;
 import com.example.nomad.nomad.service.serviceModel.ServService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;

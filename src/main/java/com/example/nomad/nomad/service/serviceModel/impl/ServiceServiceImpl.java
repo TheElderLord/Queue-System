@@ -1,7 +1,6 @@
 package com.example.nomad.nomad.service.serviceModel.impl;
 
 import com.example.nomad.nomad.dto.ServiceModelDto;
-import com.example.nomad.nomad.exception.ResourceNotFoundException;
 import com.example.nomad.nomad.mapper.ServiceModelMapper;
 import com.example.nomad.nomad.model.RoleServiceModel;
 import com.example.nomad.nomad.model.ServiceModel;
@@ -9,8 +8,6 @@ import com.example.nomad.nomad.model.Ticket;
 import com.example.nomad.nomad.repository.RoleServiceRepository;
 import com.example.nomad.nomad.repository.ServiceRepository;
 import com.example.nomad.nomad.repository.TicketRepository;
-import com.example.nomad.nomad.service.role.RoleService;
-import com.example.nomad.nomad.service.roleService.RoleServiceService;
 import com.example.nomad.nomad.service.serviceModel.ServService;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
 import lombok.AllArgsConstructor;
@@ -19,7 +16,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service

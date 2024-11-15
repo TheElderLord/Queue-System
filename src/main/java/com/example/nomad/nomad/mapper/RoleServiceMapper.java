@@ -2,6 +2,7 @@ package com.example.nomad.nomad.mapper;
 
 import com.example.nomad.nomad.dto.RoleServiceDto;
 import com.example.nomad.nomad.model.RoleServiceModel;
+import com.example.nomad.nomad.service.role.RoleService;
 
 public class RoleServiceMapper {
     public static RoleServiceDto toDto(RoleServiceModel roleService) {
