@@ -16,6 +16,7 @@ import com.example.nomad.nomad.model.*;
 import com.example.nomad.nomad.repository.RoleServiceRepository;
 import com.example.nomad.nomad.repository.SessionRepository;
 import com.example.nomad.nomad.repository.TicketRepository;
+import com.example.nomad.nomad.repository.WindowServiceRepository;
 import com.example.nomad.nomad.service.branch.BranchService;
 import com.example.nomad.nomad.service.operator.OperatorService;
 import com.example.nomad.nomad.service.roleService.RoleServiceService;
@@ -23,6 +24,7 @@ import com.example.nomad.nomad.service.serviceModel.ServService;
 import com.example.nomad.nomad.service.session.SessionService;
 import com.example.nomad.nomad.service.ticket.TicketService;
 import com.example.nomad.nomad.service.window.WindowService;
+import com.example.nomad.nomad.service.windowService.WinServiceService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,8 @@ public class TicketServiceImpl implements TicketService {
     private final BranchService branchService;
     private final SessionService sessionService;
     private final WindowService windowService;
+    private final WinServiceService winServiceService;
+    private final WindowServiceRepository windowServiceRepository;
     private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
 
@@ -101,9 +105,9 @@ public class TicketServiceImpl implements TicketService {
 
         // Fetch available services based on the role IDs
         List<Long> availableServiceIds = roleIds.stream()
-                .flatMap(roleId -> roleServiceService.getRoleServicesByRoleId(roleId).stream())
+                .flatMap(roleId -> winServiceService.getWindowServicesByWindowId(roleId).stream())
                 .distinct()
-                .map(RoleServiceDto::getServiceId)// Ensure distinct services
+                .map(WindowServiceModelDto::getServiceId)// Ensure distinct services
                 .toList();
 
         // Extract service models from available services
@@ -137,9 +141,9 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<TicketDto> getTicketsByBranchIdAndStatusAndOperator(SessionByBranchAndStatusDto session) {
         Operator operator = operatorService.getEntityById(session.getOperatorId());
-        List<RoleServiceModel> roleservices = roleServiceRepository.findAllByRoleId(operator.getRole().getId());
+        List<WindowServiceModel> roleservices = windowServiceRepository.findAllByWindowId(operator.getRole().getId());
         List<Ticket> tickets = new ArrayList<>();
-        for (RoleServiceModel rsm : roleservices) {
+        for (WindowServiceModel rsm : roleservices) {
                 tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(),session.getStatus()));
         }
         tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
