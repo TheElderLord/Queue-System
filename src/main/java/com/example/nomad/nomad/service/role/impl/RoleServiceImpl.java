@@ -45,7 +45,7 @@ public class RoleServiceImpl implements com.example.nomad.nomad.service.role.Rol
         for (RoleDto role:roleDtos) {
             for (RoleServiceDto roleServiceDto:role.getRoleServices()) {
                 ServiceModel serviceModel = servService.getEntityById(roleServiceDto.getServiceId());
-                roleServiceDto.setParentServiceName(serviceModel.getParentService().getName());
+//                roleServiceDto.setParentServiceName(serviceModel.getParentService().getName());
             }
         }
 

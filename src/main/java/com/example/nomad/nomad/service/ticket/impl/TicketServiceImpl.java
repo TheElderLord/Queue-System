@@ -140,10 +140,9 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<TicketDto> getTicketsByBranchIdAndStatusAndOperator(SessionByBranchAndStatusDto session) {
-        Operator operator = operatorService.getEntityById(session.getOperatorId());
-        List<WindowServiceModel> roleservices = windowServiceRepository.findAllByWindowId(operator.getRole().getId());
+        List<WindowServiceModel> windowservices = windowServiceRepository.findAllByWindowId(session.getWindowId());
         List<Ticket> tickets = new ArrayList<>();
-        for (WindowServiceModel rsm : roleservices) {
+        for (WindowServiceModel rsm : windowservices) {
                 tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(),session.getStatus()));
         }
         tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
@@ -370,10 +369,10 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @ExceptionHandler(NullPointerException.class)
     public TicketDto callNext(SessionByBranchAndStatusDto session) {
-        Operator operator = operatorService.getEntityById(session.getOperatorId());
-        List<RoleServiceModel> roleservices = roleServiceRepository.findAllByRoleId(operator.getRole().getId());
+//        Operator operator = operatorService.getEntityById(session.getOperatorId());
+        List<WindowServiceModel> roleservices = windowServiceRepository.findAllByWindowId(session.getWindowId());
         List<Ticket> tickets = new ArrayList<>();
-        for (RoleServiceModel rsm : roleservices) {
+        for (WindowServiceModel rsm : roleservices) {
             tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(), TicketStatus.NEW));
         }
         tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));

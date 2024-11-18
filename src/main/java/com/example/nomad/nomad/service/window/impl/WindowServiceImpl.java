@@ -17,9 +17,11 @@ import com.example.nomad.nomad.repository.WindowServiceRepository;
 import com.example.nomad.nomad.service.branch.BranchService;
 import com.example.nomad.nomad.service.serviceModel.ServService;
 import com.example.nomad.nomad.service.session.SessionService;
+import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
 import com.example.nomad.nomad.service.window.WindowService;
 import com.example.nomad.nomad.service.windowService.WinServiceService;
 import lombok.AllArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,8 @@ public class WindowServiceImpl implements WindowService {
     private ServService servService;
 
     private final BranchService branchService;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
+
 //    private final SessionService sessionService;
 
     @Override
@@ -43,7 +47,7 @@ public class WindowServiceImpl implements WindowService {
                 .map(WindowMapper::toDto)
                 .toList();
 
-        List<WindowDto> roleDtos = roles.stream()
+        List<WindowDto> windowDtos = roles.stream()
                 .map(e -> {
                     var roleServices = windowServiceRepository.findAllByWindowId(e.getId()).stream()
                             .map(WindowServiceMapper::toDto)
@@ -53,14 +57,16 @@ public class WindowServiceImpl implements WindowService {
                 })
                 .collect(Collectors.toList());
 
-        for (WindowDto windowDto:roleDtos) {
+        for (WindowDto windowDto:windowDtos) {
             for (WindowServiceModelDto windowServiceModelDto:windowDto.getWindowServiceModelDtos()) {
+
                 ServiceModel serviceModel = servService.getEntityById(windowServiceModelDto.getServiceId());
-                windowServiceModelDto.setParentServiceName(serviceModel.getParentService().getName());
+                logger.info("Service model from wind:"+ serviceModel.toString());
+//                windowServiceModelDto.setParentServiceName(serviceModel.getParentService().getName());
             }
         }
 
-        return roleDtos;
+        return windowDtos;
     }
 
     @Override
