@@ -95,16 +95,16 @@ public class TicketServiceImpl implements TicketService {
         if (activeSessionsByBranch.isEmpty()) {
             return Collections.emptyList();
         }
-        List<Operator> activeOperators = activeSessionsByBranch.stream().map(Session::getOperator).toList();
+        List<Window> activeWindows = activeSessionsByBranch.stream().map(Session::getWindow).toList();
 
         // Extract the IDs of roles of active operators
-        List<Long> roleIds = activeOperators.stream()
-                .map(e -> e.getRole().getId())
+        List<Long> windIds = activeWindows.stream()
+                .map(Window::getId)
                 .distinct()  // Ensure distinct role IDs
                 .toList();
 
         // Fetch available services based on the role IDs
-        List<Long> availableServiceIds = roleIds.stream()
+        List<Long> availableServiceIds = windIds.stream()
                 .flatMap(roleId -> winServiceService.getWindowServicesByWindowId(roleId).stream())
                 .distinct()
                 .map(WindowServiceModelDto::getServiceId)// Ensure distinct services
