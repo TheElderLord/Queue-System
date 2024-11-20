@@ -13,6 +13,7 @@ import com.example.nomad.nomad.service.branch.BranchService;
 import com.example.nomad.nomad.service.operator.OperatorService;
 import com.example.nomad.nomad.service.session.SessionService;
 import com.example.nomad.nomad.service.window.WindowService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -127,6 +128,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
+    @Transactional
     public SessionDto stopASession(Long id,SessionStatus sessionStatus) {
         Session session = getEntityById(id);
 
