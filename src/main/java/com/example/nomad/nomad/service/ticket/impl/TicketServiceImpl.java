@@ -122,7 +122,7 @@ public class TicketServiceImpl implements TicketService {
         List<ServiceModel> parentServices = serviceModels.stream().map(ServiceModel::getParentService).distinct()  // Ensure distinct service models
                 .toList();
 
-        return parentServices.stream().map(ServiceModelMapper::toDto).collect(Collectors.toList());
+        return serviceModels.stream().map(ServiceModelMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
