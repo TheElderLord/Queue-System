@@ -60,10 +60,15 @@ public class WindowController {
         WindowDto window = windowService.updateWindow(id, updatedWindow);
         return ResponseEntity.ok(window);
     }
-
+    @PutMapping("/disable/{windowId}")
+    public ResponseEntity<Void> deactivateWindow(@PathVariable Long windowId){
+        windowService.setInactive(windowId);
+        return ResponseEntity.noContent().build();
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteWindow(@PathVariable Long id) {
         windowService.deleteWindow(id);
         return ResponseEntity.noContent().build();
     }
+
 }
