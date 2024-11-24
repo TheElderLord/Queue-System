@@ -63,6 +63,8 @@ public class ServiceServiceImpl implements ServService {
             service.setPriority(newServiceBodyModel.getPriority());
             service.setMaxServTime(newServiceBodyModel.getMaxServTime());
             service.setMaxWaitTime(newServiceBodyModel.getMaxWaitTime());
+            service.setStartNumberRange(newServiceBodyModel.getStartRange());
+            service.setEndNumberRange(newServiceBodyModel.getEndRange());
             if(newServiceBodyModel.getParentId()!=null){
                 ServiceModel parent= getEntityById(newServiceBodyModel.getParentId());;
                 service.setParentService(parent);
