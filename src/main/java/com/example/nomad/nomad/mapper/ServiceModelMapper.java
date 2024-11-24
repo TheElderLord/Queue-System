@@ -15,6 +15,8 @@ public class ServiceModelMapper {
         dto.setMaxServTime(service.getMaxServTime());
         dto.setMaxWaitTime(service.getMaxWaitTime());
         dto.setPriority(service.getPriority());
+        dto.setStartRange(service.getStartNumberRange());
+        dto.setEndRange(service.getEndNumberRange());
         if (service.getParentService() != null) {
             dto.setParentId(service.getParentService().getId());
             dto.setParentName(service.getParentService().getName());
@@ -33,6 +35,8 @@ public class ServiceModelMapper {
         service.setMaxServTime(dto.getMaxServTime());
         service.setMaxWaitTime(dto.getMaxWaitTime());
         service.setPriority(dto.getPriority());
+        service.setStartNumberRange(dto.getStartRange());
+        service.setEndNumberRange(dto.getEndRange());
         // Parent service model needs to be set separately, typically by service layer
         return service;
     }

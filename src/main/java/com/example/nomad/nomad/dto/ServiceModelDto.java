@@ -15,5 +15,7 @@ public class ServiceModelDto {
     private String parentName;
     private Long priority;
     private Long parentId;
+    private Integer startRange;
+    private Integer endRange;
 
 }

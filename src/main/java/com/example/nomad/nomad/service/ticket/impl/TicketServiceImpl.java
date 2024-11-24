@@ -25,6 +25,7 @@ import com.example.nomad.nomad.service.session.SessionService;
 import com.example.nomad.nomad.service.ticket.TicketService;
 import com.example.nomad.nomad.service.window.WindowService;
 import com.example.nomad.nomad.service.windowService.WinServiceService;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -45,38 +46,35 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final SessionRepository sessionRepository;
-    private final RoleServiceRepository roleServiceRepository;
     private final OperatorService operatorService;
-    private final RoleServiceService roleServiceService;
     private final ServService servService;
     private final BranchService branchService;
     private final SessionService sessionService;
     private final WindowService windowService;
     private final WinServiceService winServiceService;
-    private final WindowServiceRepository windowServiceRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
 
     private final Map<Long, Range> serviceTicketRanges = new HashMap<>();
     private static LocalDate lastResetDate;
 
-    {
+    @PostConstruct
+    public void postConstruct() {
         initializeRanges();
-        // Add more ranges as needed
     }
 
+
     private void initializeRanges(){
+        servService.getServices().forEach(e -> {
+            try {
+                serviceTicketRanges.put(e.getId(), new Range(e.getStartRange(), e.getEndRange()));
+            } catch (Exception ex) {
+                // Handle the error (e.g., log it or take alternative action)
+                logger.error("Error processing service: " + e.getId(), ex);
+            }
+        });
 
-
-        serviceTicketRanges.put(1L, new Range(1, 100));
-        serviceTicketRanges.put(2L, new Range(200, 300));
-        serviceTicketRanges.put(3L, new Range(300, 400));
-        serviceTicketRanges.put(4L, new Range(400, 500));
-        serviceTicketRanges.put(5L, new Range(500, 600));
-        serviceTicketRanges.put(6L, new Range(600, 700));
-        serviceTicketRanges.put(7L, new Range(700, 800));
-        serviceTicketRanges.put(8L, new Range(700, 800));
-        serviceTicketRanges.put(9L, new Range(700, 800));
     }
 
     @Override
@@ -140,10 +138,10 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<TicketDto> getTicketsByBranchIdAndStatusAndOperator(SessionByBranchAndStatusDto session) {
-        List<WindowServiceModel> windowservices = windowServiceRepository.findAllByWindowId(session.getWindowId());
+        List<WindowServiceModelDto> windowservices = winServiceService.getWindowServicesByWindowId(session.getWindowId());
         List<Ticket> tickets = new ArrayList<>();
-        for (WindowServiceModel rsm : windowservices) {
-                tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(),session.getStatus()));
+        for (WindowServiceModelDto rsm : windowservices) {
+                tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceId(),session.getStatus()));
         }
         tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
         Set<Ticket> set = new HashSet<>(tickets);
@@ -297,10 +295,15 @@ public class TicketServiceImpl implements TicketService {
                 .map(Ticket::getTicketNumber)
                 .collect(Collectors.toSet());
 
-        // Fetch the range for the service
-        Range range = serviceTicketRanges.get(serviceId);
+        Range range = null;
+        try {
+            range= serviceTicketRanges.get(serviceId);
+        }catch (Exception e){
+            logger.info("The range is null");
+        }
+
         if (range == null) {
-            throw new IllegalArgumentException("No ticket number range defined for service ID: " + serviceId);
+            logger.info("No ticket number range defined for service ID: " + serviceId);
         }
 
         // Find the first available ticket number within the range
@@ -370,10 +373,10 @@ public class TicketServiceImpl implements TicketService {
     @ExceptionHandler(NullPointerException.class)
     public TicketDto callNext(SessionByBranchAndStatusDto session) {
 //        Operator operator = operatorService.getEntityById(session.getOperatorId());
-        List<WindowServiceModel> roleservices = windowServiceRepository.findAllByWindowId(session.getWindowId());
+        List<WindowServiceModelDto> roleservices = winServiceService.getWindowServicesByWindowId(session.getWindowId());
         List<Ticket> tickets = new ArrayList<>();
-        for (WindowServiceModel rsm : roleservices) {
-            tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceModel().getId(), TicketStatus.NEW));
+        for (WindowServiceModelDto rsm : roleservices) {
+            tickets.addAll(ticketRepository.findAllByServiceModelIdAndStatus(rsm.getServiceId(), TicketStatus.NEW));
         }
         tickets.sort(Comparator.comparing(Ticket::getRegistrationTime));
 

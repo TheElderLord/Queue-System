@@ -26,6 +26,10 @@ public class ServiceModel {
     private Long maxWaitTime=1000L;
     @Column(name = "priority",nullable = false)
     private Long priority;
+    @Column(name = "start_range")
+    private Integer startNumberRange;
+    @Column(name = "end_range")
+    private Integer endNumberRange;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private ServiceModel parentService;
