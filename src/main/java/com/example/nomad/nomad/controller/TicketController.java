@@ -4,10 +4,7 @@ package com.example.nomad.nomad.controller;
 import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ServiceModelDto;
 import com.example.nomad.nomad.dto.session.SessionByBranchAndStatusDto;
-import com.example.nomad.nomad.dto.ticket.TicketDto;
-import com.example.nomad.nomad.dto.ticket.TicketRatingDto;
-import com.example.nomad.nomad.dto.ticket.TicketRedirectDto;
-import com.example.nomad.nomad.dto.ticket.TicketRegisterDto;
+import com.example.nomad.nomad.dto.ticket.*;
 import com.example.nomad.nomad.service.ticket.TicketService;
 import com.example.nomad.nomad.service.ticket.impl.TicketServiceImpl;
 import lombok.AllArgsConstructor;
@@ -43,7 +40,7 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.getAgentTickets(agent));
     }
     @GetMapping("/queue")
-    private ResponseEntity<List<TicketDto>> getByStatusTickets(@RequestParam(required = true) Long branchId){
+    private ResponseEntity<List<TicketQueueDto>> getByStatusTickets(@RequestParam(required = true) Long branchId){
         return ResponseEntity.ok(ticketService.getQueueTickets(branchId));
     }
     @GetMapping("/available-services/{branch_id}")

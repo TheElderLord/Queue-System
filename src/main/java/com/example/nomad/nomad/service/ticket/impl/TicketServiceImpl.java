@@ -8,18 +8,12 @@ import com.example.nomad.nomad.dto.session.SessionDto;
 import com.example.nomad.nomad.dto.ticket.*;
 import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.exception.ResourceNotFoundException;
-import com.example.nomad.nomad.mapper.ServiceModelMapper;
-import com.example.nomad.nomad.mapper.SessionMapper;
-import com.example.nomad.nomad.mapper.TicketMapper;
-import com.example.nomad.nomad.mapper.WindowMapper;
+import com.example.nomad.nomad.mapper.*;
 import com.example.nomad.nomad.model.*;
-import com.example.nomad.nomad.repository.RoleServiceRepository;
 import com.example.nomad.nomad.repository.SessionRepository;
 import com.example.nomad.nomad.repository.TicketRepository;
-import com.example.nomad.nomad.repository.WindowServiceRepository;
 import com.example.nomad.nomad.service.branch.BranchService;
 import com.example.nomad.nomad.service.operator.OperatorService;
-import com.example.nomad.nomad.service.roleService.RoleServiceService;
 import com.example.nomad.nomad.service.serviceModel.ServService;
 import com.example.nomad.nomad.service.session.SessionService;
 import com.example.nomad.nomad.service.ticket.TicketService;
@@ -160,14 +154,14 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketDto> getQueueTickets(Long branchId) {
+    public List<TicketQueueDto> getQueueTickets(Long branchId) {
         ZoneId zoneId = ZoneId.of("GMT+5");
         ZonedDateTime startOfDay = ZonedDateTime.now(zoneId).toLocalDate().atStartOfDay(zoneId);
         ZonedDateTime endOfDay = startOfDay.plusDays(1).minusNanos(1);
         List<Ticket> tickets =
                 ticketRepository.findAllByBranchIdAndStatusAndRegistrationTimeBetween(branchId, TicketStatus.INSERVICE,startOfDay,endOfDay);
         return tickets.stream()
-                .map(TicketMapper::toDto).collect(Collectors.toList());
+                .map(TicketQueueMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
