@@ -180,9 +180,20 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketDto> getTicketsByStatus(TicketStatus status) {
+    public List<TicketDto> getTicketsDtoByStatus(TicketStatus status) {
         return ticketRepository.findAllByStatus(status).stream()
                 .map(TicketMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TicketDto> getTicketsDtoByStatuses(TicketStatus... statuses) {
+        return ticketRepository.findAllByStatuses(statuses).stream()
+                .map(TicketMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Ticket> getTicketsByStatus(TicketStatus status) {
+        return ticketRepository.findAllByStatus(status);
     }
 
     @Override

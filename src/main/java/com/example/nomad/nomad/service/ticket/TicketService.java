@@ -22,7 +22,9 @@ public interface TicketService {
     List<TicketDto> getTicketsBySessionId(Long id);
     List<TicketDto> getTicketsByServiceModelId(Long id);
     List<TicketDto> getTicketsByBranchId(Long id);
-    List<TicketDto> getTicketsByStatus(TicketStatus status);
+    List<TicketDto> getTicketsDtoByStatus(TicketStatus status);
+    List<TicketDto> getTicketsDtoByStatuses(TicketStatus... status);
+    List<Ticket> getTicketsByStatus(TicketStatus status);
     WindowDto getTicketWindow(Long id);
     TicketDto getTicketById(Long id);
     TicketStatus getTicketStatus(Long id);
