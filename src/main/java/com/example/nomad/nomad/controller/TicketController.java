@@ -70,7 +70,8 @@ public class TicketController {
     @PutMapping("/end/{id}")
     private ResponseEntity<TicketDto> stopServ(@PathVariable Long
                                                 id, @RequestParam TicketStatus status){
-        return ResponseEntity.ok(ticketService.complete(id,status));
+        ticketService.complete(id,status);
+        return ResponseEntity.noContent().build();
     }
     @PutMapping("/rating")
     private ResponseEntity<Void> setRate(@RequestBody TicketRatingDto ticketRatingDto){

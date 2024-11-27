@@ -23,8 +23,8 @@ public interface TicketService {
     List<TicketDto> getTicketsByServiceModelId(Long id);
     List<TicketDto> getTicketsByBranchId(Long id);
     List<TicketDto> getTicketsDtoByStatus(TicketStatus status);
-    List<TicketDto> getTicketsDtoByStatuses(TicketStatus... status);
-    List<Ticket> getTicketsByStatus(TicketStatus status);
+    List<TicketDto> getTicketsDtoByStatuses(List<TicketStatus> statuses);
+    List<Ticket> getTicketsByStatus(List<TicketStatus> statuses);
     WindowDto getTicketWindow(Long id);
     TicketDto getTicketById(Long id);
     TicketStatus getTicketStatus(Long id);
@@ -37,7 +37,7 @@ public interface TicketService {
     TicketDto bookTicket(TicketBookDto bookDto);
     TicketDto activateBookedTicket(int code);
     TicketDto callNext(SessionByBranchAndStatusDto session);
-    TicketDto complete(Long id,TicketStatus status);
+    void complete(Long id,TicketStatus status);
     TicketDto setStatus(Long id,TicketStatus status);
     TicketDto updateTicket(Long id, TicketDto newTicketBody);
     void deleteTicket(Long id);

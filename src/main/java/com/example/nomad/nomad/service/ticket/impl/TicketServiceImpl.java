@@ -186,14 +186,14 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketDto> getTicketsDtoByStatuses(TicketStatus... statuses) {
-        return ticketRepository.findAllByStatuses(statuses).stream()
+    public List<TicketDto> getTicketsDtoByStatuses(List<TicketStatus> statuses) {
+        return ticketRepository.findAllByStatusIn(statuses).stream()
                 .map(TicketMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<Ticket> getTicketsByStatus(TicketStatus status) {
-        return ticketRepository.findAllByStatus(status);
+    public List<Ticket> getTicketsByStatus(List<TicketStatus> statuses) {
+        return ticketRepository.findAllByStatusIn(statuses);
     }
 
     @Override
@@ -410,14 +410,14 @@ public class TicketServiceImpl implements TicketService {
 
 
     @Override
-    public TicketDto complete(Long id, TicketStatus status) {
+    public void complete(Long id, TicketStatus status) {
         Ticket ticket = getEntityById(id);
         ticket.setStatus(status);
         ZoneId gmtPlus5 = ZoneId.of("GMT+5");
         ZonedDateTime gmtPlus5ZonedDateTime = ZonedDateTime.now(gmtPlus5);
         ticket.setServiceEndTime(gmtPlus5ZonedDateTime);
         ticketRepository.save(ticket);
-        return TicketMapper.toDto(ticket);
+//        return TicketMapper.toDto(ticket);
     }
 
     @Override
