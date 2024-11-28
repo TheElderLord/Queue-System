@@ -3,7 +3,10 @@ package com.example.nomad.nomad.background;
 
 import com.example.nomad.nomad.Enum.TicketStatus;
 import com.example.nomad.nomad.dto.ticket.TicketDto;
+import com.example.nomad.nomad.exception.ForbiddenActionException;
 import com.example.nomad.nomad.model.Ticket;
+import com.example.nomad.nomad.model.TicketStatusTimeout;
+import com.example.nomad.nomad.repository.TicketStatusTimeOutRepo;
 import com.example.nomad.nomad.service.ticket.TicketService;
 import lombok.AllArgsConstructor;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,7 @@ import java.util.List;
 public class TicketStatusChecker {
 
     private final TicketService ticketService;
+    private final TicketStatusTimeOutRepo ticketStatusTimeOutRepo;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SessionChecker.class);
 
 
@@ -32,24 +36,31 @@ public class TicketStatusChecker {
         try {
             ZoneId gmtPlus5 = ZoneId.of("GMT+5");
             ZonedDateTime now = ZonedDateTime.now(gmtPlus5);
+            TicketStatus statusNew = TicketStatus.NEW;
+            TicketStatus statusInservice = TicketStatus.INSERVICE;
 
-            // Fetch all active sessions
-            List<Ticket> activeTickets = ticketService.getTicketsByStatus(Arrays.asList(TicketStatus.NEW, TicketStatus.INSERVICE) );
+            List<Ticket> activeTickets = ticketService.getTicketsByStatus(Arrays.asList(statusNew,statusInservice) );
+            activeTickets.stream().forEach(e->{
+                Duration duration = Duration.between(e.getRegistrationTime(), now);
+                if(e.getStatus() == statusNew) findStatus(statusNew, e.getId(), duration);
+                else findStatus(statusInservice, e.getId(), duration);
+            });
 
-            for (Ticket ticket : activeTickets) {
-                Duration duration = Duration.between(ticket.getRegistrationTime(), now);
-
-                if (duration.toHours() >= 3) {
-                    // Stop the session
-                    ticketService.complete(ticket.getId(), TicketStatus.MISSED);
-                    // Log the action if needed
-                    logger.info("Ticket with ID " + ticket.getId() + " has been stopped after 8 hours.");
-                }
-            }
         } catch (Exception e) {
             // Handle exceptions to prevent the scheduler from halting
             e.printStackTrace();
         }
+    }
+
+    private void findStatus(TicketStatus statusNew, Long ticketId, Duration duration) {
+        TicketStatusTimeout ticketStatusTimeout = ticketStatusTimeOutRepo.findByTicketStatus(statusNew);
+        if(ticketStatusTimeout == null){
+            throw new ForbiddenActionException("The timout is not defined");
+        }
+        if(duration.toHours()>=ticketStatusTimeout.getHour()){
+            ticketService.complete(ticketId, ticketStatusTimeout.getToStatus());
+        }
+
     }
 }
 

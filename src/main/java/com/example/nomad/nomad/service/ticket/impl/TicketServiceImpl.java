@@ -159,7 +159,8 @@ public class TicketServiceImpl implements TicketService {
         ZonedDateTime startOfDay = ZonedDateTime.now(zoneId).toLocalDate().atStartOfDay(zoneId);
         ZonedDateTime endOfDay = startOfDay.plusDays(1).minusNanos(1);
         List<Ticket> tickets =
-                ticketRepository.findAllByBranchIdAndStatusAndRegistrationTimeBetween(branchId, TicketStatus.INSERVICE,startOfDay,endOfDay);
+//                ticketRepository.findAllByBranchIdAndStatusAndRegistrationTimeBetween(branchId, TicketStatus.INSERVICE,startOfDay,endOfDay);
+                ticketRepository.findAllByBranchIdAndStatus(branchId, TicketStatus.INSERVICE);
         return tickets.stream()
                 .map(TicketQueueMapper::toDto).collect(Collectors.toList());
     }
