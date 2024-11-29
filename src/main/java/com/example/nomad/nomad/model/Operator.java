@@ -27,6 +27,6 @@ public class Operator {
     @Column(name = "active", nullable = false, columnDefinition = "boolean default false")
     private boolean active;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "role_id")
     private Role role;
 }
